@@ -1,0 +1,107 @@
+import { CollectionConfig } from 'payload'
+import ExpensesListViewController from './_components/ExpensesListViewController'
+
+const Expenses: CollectionConfig = {
+  slug: 'expenses',
+  access: {
+    create: () => true,
+    read: () => true,
+    update: () => true,
+    delete: () => true,
+  },
+  admin: {
+    components: {
+      views: {
+        list: {
+          Component: '/collections/Expenses/_components/ExpensesListViewController',
+          // Component: ExpensesList,
+        },
+      },
+      // edit: {
+      //   SaveButton: SaveAndCloseButton,
+      // },
+    },
+    pagination: {
+      defaultLimit: 30,
+    },
+    //   views: {
+    //     Edit: {
+    //       // MyCustomTab: {
+    //       //   Component: ExpensesDefaultView,
+    //       //   path: "/test",
+    //       //   Tab: TestView2,
+    //       // },
+    //       Default: {
+    //         Component: ExpensesDefaultView,
+    //       }
+    //     }
+
+    //   }
+    // }
+  },
+  fields: [
+    {
+      type: 'number',
+      name: 'amount',
+    },
+    {
+      name: 'category',
+      type: 'select',
+      options: [
+        {
+          label: 'Food',
+          value: 'food',
+        },
+        {
+          label: 'Shelter',
+          value: 'shelter',
+        },
+        {
+          label: 'Transport',
+          value: 'transport',
+        },
+        {
+          label: 'Health',
+          value: 'health',
+        },
+        {
+          label: 'Fitness',
+          value: 'Fitness',
+        },
+        {
+          label: 'Education',
+          value: 'education',
+        },
+        {
+          label: 'Business',
+          value: 'business',
+        },
+        {
+          label: 'Wife',
+          value: 'wife',
+        },
+        {
+          label: 'Non-Essential',
+          value: 'non-essential',
+        },
+      ],
+    },
+    {
+      name: 'tags',
+      type: 'relationship',
+      relationTo: 'expenseTags',
+      index: true,
+    },
+    {
+      name: 'comment',
+      type: 'textarea',
+    },
+    {
+      name: 'date',
+      type: 'date',
+      defaultValue: new Date().toISOString(),
+    },
+  ],
+}
+
+export default Expenses
