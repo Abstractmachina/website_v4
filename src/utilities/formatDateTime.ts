@@ -1,3 +1,5 @@
+import dateformat from "dateformat"
+
 export const formatDateTime = (timestamp: string): string => {
   const now = new Date()
   let date = now
@@ -17,4 +19,23 @@ export const formatDateTime = (timestamp: string): string => {
   // const SS = (seconds < 10) ? `0${seconds}` : seconds;
 
   return `${MM}/${DD}/${YYYY}`
+}
+
+export const formatDateTime2 = (timestamp: string): string => {
+  const currentDate = new Date();
+
+  const parsedDate = new Date(Date.parse(timestamp));
+
+  if (currentDate.getDate() === parsedDate.getDate()) {
+    return "Today";
+  }
+
+  if (currentDate.getDate() - 1 === parsedDate.getDate()) {
+    return "Yesterday";
+  }
+
+  return dateformat(
+    new Date(Date.parse(timestamp)),
+    "dd/mm/yy"
+  )
 }

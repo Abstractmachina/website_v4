@@ -4,25 +4,43 @@
 // import payload from 'payload';
 // import { Expense } from 'payload/generated-types';
 
-import { Expense } from '@/payload-types'
 import { ListViewServerProps } from 'payload'
 import React from 'react'
 import ExpensesListTable from './ExpensesListTable'
+import { Gutter } from '@payloadcms/ui'
+import { Expense } from '@/payload-types'
 
 
+function orderExpensesByDay(input: Expense[]) {
+  const output = new Map<string, Expense[]>();
 
+  for (let i = 0; i < input.length; i++) {
+    const expense = input[i];
+    if (!expense) continue;
+    const current = output.get(expense.date);
+    if (current) {
+      output.set(expense.date, [...current, expense]);
+    } else { 
+      output.set(expense.date, [expense]);
+    }
+  }
+
+  return output;
+}
 
 
 export function ExpensesListViewController(props: ListViewServerProps) {
-  console.log(props)
+  // console.log(props)
+
+  const orderedExpenses = orderExpensesByDay(props.data.docs);
 
   return (
-    <div>
+    <Gutter>
       <div>This is a custom List View (Server)</div>
-      <ExpensesListTable docs={ props.data.docs } />
+      <ExpensesListTable expenses={orderedExpenses} />
       {/* <div>{props.columnState.map((column, index) => (<div key={"columnssss_"+ index}>{column.Heading}</div>))}</div> */}
       {/* <div>{props.data?.docs.map((doc:Expense, index:number) => (<div key={"columnssss_"+ index}>{doc.amount}</div>))}</div> */}
-    </div>
+    </Gutter>
   )
 }
 

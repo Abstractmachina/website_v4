@@ -741,9 +741,9 @@ export interface Expense {
   category?:
     | ('food' | 'shelter' | 'transport' | 'health' | 'Fitness' | 'education' | 'business' | 'wife' | 'non-essential')
     | null;
-  tags?: (string | null) | ExpenseTag;
+  tag?: (string | null) | ExpenseTag;
   comment?: string | null;
-  date?: string | null;
+  date: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -1321,7 +1321,7 @@ export interface UsersSelect<T extends boolean = true> {
 export interface ExpensesSelect<T extends boolean = true> {
   amount?: T;
   category?: T;
-  tags?: T;
+  tag?: T;
   comment?: T;
   date?: T;
   updatedAt?: T;

@@ -87,7 +87,7 @@ const Expenses: CollectionConfig = {
       ],
     },
     {
-      name: 'tags',
+      name: 'tag',
       type: 'relationship',
       relationTo: 'expenseTags',
       index: true,
@@ -100,6 +100,7 @@ const Expenses: CollectionConfig = {
       name: 'date',
       type: 'date',
       defaultValue: new Date().toISOString(),
+      required: true,
     },
   ],
 }
