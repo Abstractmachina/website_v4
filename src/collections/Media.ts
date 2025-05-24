@@ -1,4 +1,4 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionAfterReadHook, CollectionConfig } from 'payload'
 
 import {
   FixedToolbarFeature,
@@ -13,6 +13,31 @@ import { authenticated } from '../access/authenticated'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+
+/**
+ * Description
+ * @param {doc} doc full document
+ * @param {any} req full express request
+ * @param {any} query full express request query
+ * @param {any} findMany boolean to denote if this hook is running against finding one, or finding many
+ * @returns {any}
+ */
+const generateBunnyUrl: CollectionAfterReadHook = async ({
+  doc,
+  req,
+  query,
+  findMany,
+}) => {
+  const filename = doc.filename;
+  const path = `/media/${filename}`;
+  // const url = generateBunnyCdnToken(path, 86400);
+  const url = `${process.env.BUNNY_PUBLIC_CDN_PULLZONE}${path}`;
+
+  doc.url = url;
+  return doc;
+};
+
+
 
 export const Media: CollectionConfig = {
   slug: 'media',
@@ -40,41 +65,43 @@ export const Media: CollectionConfig = {
   ],
   upload: {
     // Upload to the public/media directory in Next.js making them publicly accessible even outside of Payload
-    staticDir: path.resolve(dirname, '../../public/media'),
+    // staticURL: `${process.env.BUNNY_PUBLIC_CDN_PULLZONE}/media`,
+    // staticDir: "media",
+    disableLocalStorage: true,
     adminThumbnail: 'thumbnail',
     focalPoint: true,
-    imageSizes: [
-      {
-        name: 'thumbnail',
-        width: 300,
-      },
-      {
-        name: 'square',
-        width: 500,
-        height: 500,
-      },
-      {
-        name: 'small',
-        width: 600,
-      },
-      {
-        name: 'medium',
-        width: 900,
-      },
-      {
-        name: 'large',
-        width: 1400,
-      },
-      {
-        name: 'xlarge',
-        width: 1920,
-      },
-      {
-        name: 'og',
-        width: 1200,
-        height: 630,
-        crop: 'center',
-      },
-    ],
+    // imageSizes: [
+    //   {
+    //     name: 'thumbnail',
+    //     width: 300,
+    //   },
+    //   {
+    //     name: 'square',
+    //     width: 500,
+    //     height: 500,
+    //   },
+    //   {
+    //     name: 'small',
+    //     width: 600,
+    //   },
+    //   {
+    //     name: 'medium',
+    //     width: 900,
+    //   },
+    //   {
+    //     name: 'large',
+    //     width: 1400,
+    //   },
+    //   {
+    //     name: 'xlarge',
+    //     width: 1920,
+    //   },
+    //   {
+    //     name: 'og',
+    //     width: 1200,
+    //     height: 630,
+    //     crop: 'center',
+    //   },
+    // ],
   },
 }

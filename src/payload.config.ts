@@ -6,6 +6,8 @@ import path from 'path'
 import { buildConfig, PayloadRequest } from 'payload'
 import { fileURLToPath } from 'url'
 
+import { bunnyStorage } from '@seshuk/payload-storage-bunny';
+
 import { Categories } from './collections/Categories'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
@@ -18,6 +20,8 @@ import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
 import Expenses from './collections/Expenses/Expenses'
 import ExpenseTags from './collections/Expenses/ExpenseTags'
+import Artwork from './collections/Artwork'
+import ArtTags from './collections/ArtTags'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -65,6 +69,8 @@ export default buildConfig({
     url: process.env.DATABASE_URI || '',
   }),
   collections: [
+    Artwork,
+    ArtTags,
     Pages,
     Posts,
     Media,
@@ -78,6 +84,27 @@ export default buildConfig({
   plugins: [
     ...plugins,
     // storage-adapter-placeholder
+    bunnyStorage({
+      collections: {
+        media: {
+          prefix: 'media',
+          disablePayloadAccessControl: true, // Use direct CDN access
+        },
+      },
+      options: {
+        storage: {
+          apiKey: process.env.BUNNY_STORAGE_PASSWORD || "",
+          hostname: "taos-pullzone.b-cdn.net",
+          zoneName: "taos-storage",
+        },
+        purge: {
+          // Enable cache purging
+          enabled: true,
+          // Your Bunny API key
+          apiKey: process.env.BUNNY_CDN_KEY || "",
+        }
+      },
+    }),
   ],
   secret: process.env.PAYLOAD_SECRET,
   sharp,
