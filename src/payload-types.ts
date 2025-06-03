@@ -155,11 +155,12 @@ export interface UserAuthOperations {
  */
 export interface Artwork {
   id: string;
-  image: (string | Media)[];
+  slug: string;
   title: string;
+  images: (string | Media)[];
+  description?: string | null;
   medium?: string | null;
   dimensions?: string | null;
-  description?: string | null;
   date?: string | null;
   tags?: (string | ArtTag)[] | null;
   updatedAt: string;
@@ -1005,11 +1006,12 @@ export interface PayloadMigration {
  * via the `definition` "artwork_select".
  */
 export interface ArtworkSelect<T extends boolean = true> {
-  image?: T;
+  slug?: T;
   title?: T;
+  images?: T;
+  description?: T;
   medium?: T;
   dimensions?: T;
-  description?: T;
   date?: T;
   tags?: T;
   updatedAt?: T;
@@ -1690,9 +1692,4 @@ export interface CodeBlock {
  */
 export interface Auth {
   [k: string]: unknown;
-}
-
-
-declare module 'payload' {
-  export interface GeneratedTypes extends Config {}
 }

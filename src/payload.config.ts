@@ -109,6 +109,7 @@ export default buildConfig({
   secret: process.env.PAYLOAD_SECRET,
   sharp,
   typescript: {
+    declare: false,
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   jobs: {

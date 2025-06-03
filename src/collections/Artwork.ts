@@ -1,4 +1,7 @@
+import { anyone } from "@/access/anyone";
+import { authenticated } from "@/access/authenticated";
 import LABELS from "@/LABELS";
+import { revalidateArt } from "@/utilities/next-revalidate";
 import { CollectionConfig } from "payload";
 
 const Artwork: CollectionConfig = {
@@ -11,18 +14,34 @@ const Artwork: CollectionConfig = {
     useAsTitle: "title",
     group: LABELS.art,
   },
+  access: {
+    read: anyone,
+    create: authenticated,
+    delete: authenticated,
+    update: authenticated,
+  },
   fields: [
     {
-      name: "image",
+      name: "slug",
+      type: "text",
+      required: true,
+      unique: true
+    },
+    {
+      name: "title",
+      type: "text",
+      required: true,
+    },
+    {
+      name: "images",
       type: "upload",
       relationTo: "media",
       hasMany: true,
       required: true,
     },
     {
-      name: "title",
-      type: "text",
-      required: true,
+      name: "description",
+      type: "textarea",
     },
     {
       name: "medium",
@@ -33,10 +52,6 @@ const Artwork: CollectionConfig = {
       type: "text"
     },
     {
-      name: "description",
-      type: "text",
-    },
-    {
       name: "date",
       type: "date",
     },
@@ -45,8 +60,15 @@ const Artwork: CollectionConfig = {
       type: "relationship",
       relationTo: "artTags",
       hasMany: true,
-    }
+    },
+    {
+      name: "salesLink",
+      type: "text",
+    },
   ],
+  hooks: {
+    afterChange: [({ req: { payload }, doc }) => revalidateArt(["artwork", "artTags"])],
+  },
 };
 
 export default Artwork

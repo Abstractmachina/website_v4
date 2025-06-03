@@ -10,6 +10,7 @@ import { fileURLToPath } from 'url'
 
 import { anyone } from '../access/anyone'
 import { authenticated } from '../access/authenticated'
+import { revalidateArt } from '@/utilities/next-revalidate'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -103,5 +104,8 @@ export const Media: CollectionConfig = {
     //     crop: 'center',
     //   },
     // ],
+  },
+  hooks: {
+    afterChange: [({ req: { payload }, doc }) => revalidateArt(["media"])],
   },
 }
