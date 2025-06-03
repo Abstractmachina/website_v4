@@ -8,7 +8,7 @@ import dateformat from "dateformat";
 import { Gutter } from '@payloadcms/ui';
 import Centered from '@/components/ui/center-card';
 import { formatDateTime2 } from '@/utilities/formatDateTime';
-
+import {useQueries} from '@tanstack/react-query';
 
 
 type Props = {
@@ -18,7 +18,11 @@ type Props = {
 const ExpensesListTable = ({expenses}: Props) => {
   
   console.log(expenses);
-
+  // const tagsQuery = useQueries({
+  //   queries: Array.from(expenses).map(([key, val]) => {
+      
+  //   })
+  // })
 
   return (
       

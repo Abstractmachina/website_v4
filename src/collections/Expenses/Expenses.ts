@@ -1,5 +1,6 @@
 import { CollectionConfig } from 'payload'
 import ExpensesListViewController from './_components/ExpensesListViewController'
+import LABELS from '@/LABELS'
 
 const Expenses: CollectionConfig = {
   slug: 'expenses',
@@ -10,6 +11,7 @@ const Expenses: CollectionConfig = {
     delete: () => true,
   },
   admin: {
+    group: LABELS.personal,
     components: {
       views: {
         list: {
@@ -66,7 +68,7 @@ const Expenses: CollectionConfig = {
         },
         {
           label: 'Fitness',
-          value: 'Fitness',
+          value: 'fitness',
         },
         {
           label: 'Education',

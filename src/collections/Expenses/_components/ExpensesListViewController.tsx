@@ -9,37 +9,44 @@ import React from 'react'
 import ExpensesListTable from './ExpensesListTable'
 import { Gutter } from '@payloadcms/ui'
 import { Expense } from '@/payload-types'
-
+import { Plus } from 'lucide-react'
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+import Centered from '@/components/ui/center-card'
 
 function orderExpensesByDay(input: Expense[]) {
-  const output = new Map<string, Expense[]>();
+  const output = new Map<string, Expense[]>()
 
   for (let i = 0; i < input.length; i++) {
-    const expense = input[i];
-    if (!expense) continue;
-    const current = output.get(expense.date);
+    const expense = input[i]
+    if (!expense) continue
+    const current = output.get(expense.date)
     if (current) {
-      output.set(expense.date, [...current, expense]);
-    } else { 
-      output.set(expense.date, [expense]);
+      output.set(expense.date, [...current, expense])
+    } else {
+      output.set(expense.date, [expense])
     }
   }
 
-  return output;
+  return output
 }
-
 
 export function ExpensesListViewController(props: ListViewServerProps) {
   // console.log(props)
 
-  const orderedExpenses = orderExpensesByDay(props.data.docs);
+  const orderedExpenses = orderExpensesByDay(props.data.docs)
 
   return (
     <Gutter>
-      <div>This is a custom List View (Server)</div>
+      <Centered>
+
       <ExpensesListTable expenses={orderedExpenses} />
-      {/* <div>{props.columnState.map((column, index) => (<div key={"columnssss_"+ index}>{column.Heading}</div>))}</div> */}
-      {/* <div>{props.data?.docs.map((doc:Expense, index:number) => (<div key={"columnssss_"+ index}>{doc.amount}</div>))}</div> */}
+      <Button asChild>
+        <Link href="expenses/create">
+          <Plus />
+        </Link>
+      </Button>
+      </Centered>
     </Gutter>
   )
 }
