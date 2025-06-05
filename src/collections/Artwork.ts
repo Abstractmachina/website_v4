@@ -60,6 +60,7 @@ const Artwork: CollectionConfig = {
       type: "relationship",
       relationTo: "artTags",
       hasMany: true,
+      index: true,
     },
     {
       name: "salesLink",

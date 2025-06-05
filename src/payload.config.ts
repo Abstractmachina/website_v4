@@ -22,6 +22,8 @@ import Expenses from './collections/Expenses/Expenses'
 import ExpenseTags from './collections/Expenses/ExpenseTags'
 import Artwork from './collections/Artwork'
 import ArtTags from './collections/ArtTags'
+import AboutMe from './globals/AboutMe'
+import Graphics from './globals/Graphics'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -79,8 +81,13 @@ export default buildConfig({
     Expenses,
     ExpenseTags
   ],
+  globals: [
+    Header,
+    Footer,
+    AboutMe,
+    Graphics,
+  ],
   cors: [getServerSideURL()].filter(Boolean),
-  globals: [Header, Footer],
   plugins: [
     ...plugins,
     // storage-adapter-placeholder
