@@ -69,6 +69,7 @@ export interface Config {
   collections: {
     artwork: Artwork;
     artTags: ArtTag;
+    artBlogPosts: ArtBlogPost;
     pages: Page;
     posts: Post;
     media: Media;
@@ -89,6 +90,7 @@ export interface Config {
   collectionsSelect: {
     artwork: ArtworkSelect<false> | ArtworkSelect<true>;
     artTags: ArtTagsSelect<false> | ArtTagsSelect<true>;
+    artBlogPosts: ArtBlogPostsSelect<false> | ArtBlogPostsSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     posts: PostsSelect<false> | PostsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
@@ -213,6 +215,42 @@ export interface Media {
 export interface ArtTag {
   id: string;
   name: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "artBlogPosts".
+ */
+export interface ArtBlogPost {
+  id: string;
+  title: string;
+  heroImage?: (string | null) | Media;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  relatedPosts?: (string | ArtBlogPost)[] | null;
+  tags?: (string | ArtTag)[] | null;
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (string | null) | Media;
+    description?: string | null;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -917,6 +955,10 @@ export interface PayloadLockedDocument {
         value: string | ArtTag;
       } | null)
     | ({
+        relationTo: 'artBlogPosts';
+        value: string | ArtBlogPost;
+      } | null)
+    | ({
         relationTo: 'pages';
         value: string | Page;
       } | null)
@@ -1029,6 +1071,26 @@ export interface ArtworkSelect<T extends boolean = true> {
  */
 export interface ArtTagsSelect<T extends boolean = true> {
   name?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "artBlogPosts_select".
+ */
+export interface ArtBlogPostsSelect<T extends boolean = true> {
+  title?: T;
+  heroImage?: T;
+  content?: T;
+  relatedPosts?: T;
+  tags?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }

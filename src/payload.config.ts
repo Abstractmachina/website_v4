@@ -24,6 +24,7 @@ import Artwork from './collections/Artwork'
 import ArtTags from './collections/ArtTags'
 import AboutMe from './globals/AboutMe'
 import Graphics from './globals/Graphics'
+import ArtBlogPosts from './collections/ArtBlogPosts'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -73,6 +74,7 @@ export default buildConfig({
   collections: [
     Artwork,
     ArtTags,
+    ArtBlogPosts,
     Pages,
     Posts,
     Media,
