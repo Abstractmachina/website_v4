@@ -49,7 +49,8 @@ const getPostsSitemap = unstable_cache(
 )
 
 export async function GET() {
-  const sitemap = await getPostsSitemap()
+  // TODO: fix
+  // const sitemap = await getPostsSitemap()
 
-  return getServerSideSitemap(sitemap)
+  // return getServerSideSitemap(sitemap)
 }

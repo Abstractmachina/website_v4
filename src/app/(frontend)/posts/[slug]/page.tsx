@@ -58,17 +58,17 @@ export default async function Post({ params: paramsPromise }: Args) {
 
       {draft && <LivePreviewListener />}
 
-      <PostHero post={post} />
+      {/* <PostHero post={post} /> */}
 
       <div className="flex flex-col items-center gap-4 pt-8">
         <div className="container">
           <RichText className="max-w-[48rem] mx-auto" data={post.content} enableGutter={false} />
-          {post.relatedPosts && post.relatedPosts.length > 0 && (
+          {/* {post.relatedPosts && post.relatedPosts.length > 0 && (
             <RelatedPosts
               className="mt-12 max-w-[52rem] lg:grid lg:grid-cols-subgrid col-start-1 col-span-3 grid-rows-[2fr]"
               docs={post.relatedPosts.filter((post) => typeof post === 'object')}
             />
-          )}
+          )} */}
         </div>
       </div>
     </article>
@@ -79,7 +79,12 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
   const { slug = '' } = await paramsPromise
   const post = await queryPostBySlug({ slug })
 
-  return generateMeta({ doc: post })
+  // return generateMeta({ doc: post })
+
+  return {
+    description: post?.meta?.description,
+    title: post?.meta?.title,
+  }
 }
 
 const queryPostBySlug = cache(async ({ slug }: { slug: string }) => {

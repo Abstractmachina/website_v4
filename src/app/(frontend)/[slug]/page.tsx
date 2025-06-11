@@ -50,11 +50,12 @@ export default async function Page({ params: paramsPromise }: Args) {
   const { slug = 'home' } = await paramsPromise
   const url = '/' + slug
 
-  let page: PageType | null
+  let page: PageType | null;
 
-  page = await queryPageBySlug({
-    slug,
-  })
+  // page = await queryPageBySlug({
+  //   slug,
+  // })
+  page = null;
 
   // Remove this code once your website is seeded
   if (!page && slug === 'home') {
@@ -87,7 +88,12 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
     slug,
   })
 
-  return generateMeta({ doc: page })
+  // return generateMeta({ doc: page })
+
+  return {
+    description: page?.meta?.description,
+    title: page?.meta?.title,
+  }
 }
 
 const queryPageBySlug = cache(async ({ slug }: { slug: string }) => {
