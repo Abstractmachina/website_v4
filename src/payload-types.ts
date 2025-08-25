@@ -77,6 +77,7 @@ export interface Config {
     users: User;
     expenses: Expense;
     expenseTags: ExpenseTag;
+    income: Income;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -98,6 +99,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     expenses: ExpensesSelect<false> | ExpensesSelect<true>;
     expenseTags: ExpenseTagsSelect<false> | ExpenseTagsSelect<true>;
+    income: IncomeSelect<false> | IncomeSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -225,7 +227,23 @@ export interface ArtTag {
 export interface ArtBlogPost {
   id: string;
   title: string;
+  slug: string;
   heroImage?: (string | null) | Media;
+  heroCaption?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
   content: {
     root: {
       type: string;
@@ -253,6 +271,7 @@ export interface ArtBlogPost {
   };
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -761,6 +780,7 @@ export interface Expense {
   tag?: (string | null) | ExpenseTag;
   comment?: string | null;
   date: string;
+  recurring?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -771,6 +791,19 @@ export interface Expense {
 export interface ExpenseTag {
   id: string;
   name: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "income".
+ */
+export interface Income {
+  id: string;
+  amount: number;
+  description: string;
+  date: string;
+  recurring: boolean;
   updatedAt: string;
   createdAt: string;
 }
@@ -987,6 +1020,10 @@ export interface PayloadLockedDocument {
         value: string | ExpenseTag;
       } | null)
     | ({
+        relationTo: 'income';
+        value: string | Income;
+      } | null)
+    | ({
         relationTo: 'redirects';
         value: string | Redirect;
       } | null)
@@ -1080,7 +1117,9 @@ export interface ArtTagsSelect<T extends boolean = true> {
  */
 export interface ArtBlogPostsSelect<T extends boolean = true> {
   title?: T;
+  slug?: T;
   heroImage?: T;
+  heroCaption?: T;
   content?: T;
   relatedPosts?: T;
   tags?: T;
@@ -1093,6 +1132,7 @@ export interface ArtBlogPostsSelect<T extends boolean = true> {
       };
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1326,6 +1366,7 @@ export interface ExpensesSelect<T extends boolean = true> {
   tag?: T;
   comment?: T;
   date?: T;
+  recurring?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1335,6 +1376,18 @@ export interface ExpensesSelect<T extends boolean = true> {
  */
 export interface ExpenseTagsSelect<T extends boolean = true> {
   name?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "income_select".
+ */
+export interface IncomeSelect<T extends boolean = true> {
+  amount?: T;
+  description?: T;
+  date?: T;
+  recurring?: T;
   updatedAt?: T;
   createdAt?: T;
 }

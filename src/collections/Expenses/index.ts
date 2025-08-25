@@ -1,5 +1,4 @@
 import { CollectionConfig } from 'payload'
-import ExpensesListViewController from './_components/ExpensesListViewController'
 import LABELS from '@/LABELS'
 
 const Expenses: CollectionConfig = {
@@ -16,30 +15,12 @@ const Expenses: CollectionConfig = {
       views: {
         list: {
           Component: '/collections/Expenses/_components/ExpensesListViewController',
-          // Component: ExpensesList,
         },
       },
-      // edit: {
-      //   SaveButton: SaveAndCloseButton,
-      // },
     },
     pagination: {
       defaultLimit: 30,
     },
-    //   views: {
-    //     Edit: {
-    //       // MyCustomTab: {
-    //       //   Component: ExpensesDefaultView,
-    //       //   path: "/test",
-    //       //   Tab: TestView2,
-    //       // },
-    //       Default: {
-    //         Component: ExpensesDefaultView,
-    //       }
-    //     }
-
-    //   }
-    // }
   },
   fields: [
     {
@@ -104,6 +85,11 @@ const Expenses: CollectionConfig = {
       defaultValue: new Date().toISOString(),
       required: true,
     },
+    {
+      name: 'recurring',
+      type: 'checkbox',
+      defaultValue: false,
+    }
   ],
 }
 

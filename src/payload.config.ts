@@ -18,13 +18,14 @@ import { Header } from './Header/config'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
-import Expenses from './collections/Expenses/Expenses'
+import Expenses from './collections/Expenses'
 import ExpenseTags from './collections/Expenses/ExpenseTags'
 import Artwork from './collections/Artwork'
 import ArtTags from './collections/ArtTags'
 import AboutMe from './globals/AboutMe'
 import Graphics from './globals/Graphics'
 import ArtBlogPosts from './collections/ArtBlogPosts'
+import Income from './collections/Income'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -81,7 +82,8 @@ export default buildConfig({
     Categories,
     Users,
     Expenses,
-    ExpenseTags
+    ExpenseTags,
+    Income,
   ],
   globals: [
     Header,

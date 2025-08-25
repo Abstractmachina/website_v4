@@ -5,8 +5,22 @@ import { Code } from "@/blocks/Code/config";
 import { MediaBlock } from "@/blocks/MediaBlock/config";
 import LABELS from "@/LABELS";
 import { generatePreviewPath } from "@/utilities/generatePreviewPath";
-import { MetaDescriptionField, MetaImageField, MetaTitleField, OverviewField, PreviewField } from "@payloadcms/plugin-seo/fields";
-import { BlocksFeature, FixedToolbarFeature, HeadingFeature, HorizontalRuleFeature, InlineToolbarFeature, lexicalEditor } from "@payloadcms/richtext-lexical";
+import { revalidateArt } from "@/utilities/next-revalidate";
+import {
+	MetaDescriptionField,
+	MetaImageField,
+	MetaTitleField,
+	OverviewField,
+	PreviewField,
+} from "@payloadcms/plugin-seo/fields";
+import {
+	BlocksFeature,
+	FixedToolbarFeature,
+	HeadingFeature,
+	HorizontalRuleFeature,
+	InlineToolbarFeature,
+	lexicalEditor,
+} from "@payloadcms/richtext-lexical";
 import { CollectionConfig } from "payload";
 
 const ArtBlogPosts: CollectionConfig = {
@@ -32,6 +46,10 @@ const ArtBlogPosts: CollectionConfig = {
 		useAsTitle: "title",
 		group: LABELS.art,
 	},
+	versions: {
+		maxPerDoc: 3,
+		drafts: true,
+	},
 	access: {
 		create: authenticated,
 		delete: authenticated,
@@ -45,6 +63,11 @@ const ArtBlogPosts: CollectionConfig = {
 			required: true,
 		},
 		{
+			name: "slug",
+			type: "text",
+			required: true,
+		},
+		{
 			type: "tabs",
 			tabs: [
 				{
@@ -53,6 +76,19 @@ const ArtBlogPosts: CollectionConfig = {
 							name: "heroImage",
 							type: "upload",
 							relationTo: "media",
+						},
+						{
+							name: "heroCaption",
+							type: "richText",
+							editor: lexicalEditor({
+								features: ({ rootFeatures }) => {
+									return [
+										...rootFeatures,
+										FixedToolbarFeature(),
+										InlineToolbarFeature(),
+									];
+								},
+							}),
 						},
 						{
 							name: "content",
@@ -103,8 +139,8 @@ const ArtBlogPosts: CollectionConfig = {
 							},
 							hasMany: true,
 							relationTo: "artTags",
-              index: true,
-            },
+							index: true,
+						},
 					],
 					label: "Meta",
 				},
@@ -138,6 +174,11 @@ const ArtBlogPosts: CollectionConfig = {
 			],
 		},
 	],
+	hooks: {
+		afterChange: [
+			({ req: { payload }, doc }) => revalidateArt(["artBlogPosts"]),
+		],
+	},
 };
 
 export default ArtBlogPosts;

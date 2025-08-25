@@ -4,118 +4,93 @@
 // import payload from 'payload';
 // import { Expense } from 'payload/generated-types';
 
-import { ListViewServerProps } from 'payload'
-import React from 'react'
-import ExpensesListTable from './ExpensesListTable'
-import { Gutter } from '@payloadcms/ui'
-import { Expense } from '@/payload-types'
-import { Plus } from 'lucide-react'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import Centered from '@/components/ui/center-card'
+import { DocumentTabServerProps, ListViewServerProps } from "payload";
+import React from "react";
+import ExpensesListTable from "./ExpensesListTable";
+import { Gutter } from "@payloadcms/ui";
+import { Expense } from "@/payload-types";
+import { Plus } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import Centered from "@/components/ui/Centered";
+import { fetchExpenseTag } from "@/lib/serverFetchers/expenseTagFetchers";
+import PlusButton from "./PlusButton";
+import CenteredOverlay from "./CenteredOverlay";
+import H1 from "@/components/styledComponents/H1";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { CustomTabComponentClient } from "./CustomTab";
 
-function orderExpensesByDay(input: Expense[]) {
-  const output = new Map<string, Expense[]>()
+async function orderExpensesByDay(input: Expense[]) {
+	const output = new Map<string, Expense[]>();
 
-  for (let i = 0; i < input.length; i++) {
-    const expense = input[i]
-    if (!expense) continue
-    const current = output.get(expense.date)
-    if (current) {
-      output.set(expense.date, [...current, expense])
-    } else {
-      output.set(expense.date, [expense])
-    }
-  }
+	for (let i = 0; i < input.length; i++) {
+		let expense = input[i];
+		if (!expense) continue;
 
-  return output
+		if (typeof expense.tag === "string") {
+			// fetch full document.
+			const fullTag = await fetchExpenseTag(expense.tag);
+			expense = { ...expense, tag: fullTag };
+		}
+
+		const current = output.get(expense.date);
+		if (current) {
+			output.set(expense.date, [...current, expense]);
+		} else {
+			output.set(expense.date, [expense]);
+		}
+	}
+
+	return output;
 }
 
-export function ExpensesListViewController(props: ListViewServerProps) {
-  // console.log(props)
+export const ExpensesListViewController = async (
+	props: ListViewServerProps,
+) => {
+	const orderedExpenses = await orderExpensesByDay(props.data.docs);
 
-  const orderedExpenses = orderExpensesByDay(props.data.docs)
+	return (
+		<Gutter>
+			<Centered className="relative h-full">
+				<H1 className="mb-8">Expenses</H1>
+
+
+				<Tabs defaultValue="account" className="w-[800px]">
+					<TabsList>
+						<TabsTrigger value="account">Account</TabsTrigger>
+						<TabsTrigger value="password">Password</TabsTrigger>
+					</TabsList>
+					<TabsContent value="account">
+						Make changes to your account here.
+					</TabsContent>
+					<TabsContent value="password">Change your password here.</TabsContent>
+				</Tabs>
+				<ExpensesListTable expenses={orderedExpenses} />
+			</Centered>
+			<CenteredOverlay>
+				<PlusButton
+					href="expenses/create"
+					className="bottom-8 left-8 bg-red-100"
+				/>
+			</CenteredOverlay>
+		</Gutter>
+	);
+};
+
+
+export default ExpensesListViewController;
+
+
+type CustomTabComponentProps = {
+  label: string
+} & DocumentTabServerProps
+
+export function CustomTabComponent(props: CustomTabComponentProps) {
+  const { label, path } = props
 
   return (
-    <Gutter>
-      <Centered>
-
-      <ExpensesListTable expenses={orderedExpenses} />
-      <Button asChild>
-        <Link href="expenses/create">
-          <Plus />
-        </Link>
-      </Button>
-      </Centered>
-    </Gutter>
+    <li className="custom-doc-tab">
+      <CustomTabComponentClient label={label} path={path} />
+    </li>
   )
 }
-
-// function ExpensesList() {
-//   // const params = useSearchParams();
-
-//   // const [search, setSearch] = useState(typeof params?.search === 'string' ? params?.search : '')
-//   // const [isLoading, setIsLoading] = useState(true);
-//   // const [data, setData] = useState<Expense[] | null>(null);
-
-//   // useEffect(() => {
-//   //   const fetchData = async () => {
-//   //     try {
-//   //       const response = await fetch('/api/expenses', {
-//   //         method: 'GET',
-//   //         headers: {
-//   //           'Content-Type': 'application/json',
-//   //         },
-//   //       });
-
-//   //       if (!response.ok) {
-//   //         throw new Error(`Error: ${response.statusText}`);
-//   //       }
-
-//   //       const result = await response.json();
-//   //       console.log(result)
-//   //       setData(result.docs); // Payload CMS returns data under `docs`
-//   //       setIsLoading(false);
-//   //     } catch (error) {
-
-//   //     }
-//   //   }
-//   //   fetchData();
-//   // }, []);
-
-//   // if (isLoading) {
-//   //   return <p>Loading...</p>;
-//   // }
-
-//   return (
-//     <>
-//       {/* <Gutter> */}
-//         <h1>Expenses</h1>
-//         <div className="relative ">
-//           <input
-//             // className={`${}__input`}
-//             // onChange={(e) => setSearch(e.target.value)}
-//             placeholder={"placeholder.current"}
-//             type="text"
-//             // value={search || ''}
-//           />
-//           <Search className='absolute top-1/2 -translate-y-1/2 left-2'/>
-//         </div>
-//         {/* {isLoading ? (
-//           <p>Loading...</p>
-//         ) : (
-//           <table>
-//             {data?.map((expense) => (
-//               <li key={expense.id}>
-//                 <p>{expense.amount}</p>
-//               </li>
-//             ))}
-//           </table>
-//         )} */}
-
-//       {/* </Gutter> */}
-//     </>
-//   )
-// }
-
-export default ExpensesListViewController
