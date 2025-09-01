@@ -4,22 +4,28 @@ import React from "react";
 
 import { Expense, ExpenseTag } from "@/payload-types";
 import Centered from "@/components/ui/Centered";
-import { formatDateTime2 } from "@/utilities/formatDateTime";
+import { formatDateTime } from "@/utilities/formatDateTime";
+import Link from "next/link";
 
 type Props = {
 	expenses: Map<string, Expense[]>;
+	sortBy?: "date" | "category";
 };
 
-const ExpensesListTable = ({ expenses }: Props) => {
+const ExpensesListTable = ({ expenses, sortBy }: Props) => {
+	
+
+
 	return (
 		<Centered>
 			{Array.from(expenses).map(([key, val]) => {
 				const total = _getTotal(val.map((doc: Expense) => doc.amount || 0));
+
 				return (
 					<table key={key} className="w-full border-collapse mb-4">
 						<thead>
 							<tr className="px-2">
-								<th className="text-left pl-2">{formatDateTime2(key)}</th>
+								<th className="text-left pl-2">{key}</th>
 								<th className="text-right pr-2">{_formatCurrency(total)}</th>
 							</tr>
 						</thead>
@@ -27,8 +33,10 @@ const ExpensesListTable = ({ expenses }: Props) => {
 							{val.map((doc: Expense, index: number) => (
 								<tr key={key + "_" + index}>
 									<td className="pl-2">
-										<span className="font-bold">{doc.category}</span>
-										<span>{" "} {(doc.tag as ExpenseTag)?.name}</span>
+										<Link href={`/admin/collections/expenses/${doc.id}`}>
+											<span className="font-bold">{doc.category}</span>
+											<span> {(doc.tag as ExpenseTag)?.name}</span>
+										</Link>
 									</td>
 									<td className="w-20 text-right pr-2">
 										{_formatCurrency(doc.amount || 0)}

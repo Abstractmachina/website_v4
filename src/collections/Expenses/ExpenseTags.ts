@@ -1,12 +1,18 @@
+import { authenticated } from "@/access/authenticated";
+import LABELS from "@/LABELS";
 import { CollectionConfig } from "payload";
 
 const ExpenseTags: CollectionConfig = {
   slug: "expenseTags",
   access: {
-    create: () => true,
-    read: () => true,
-    update: () => true,
-    delete: () => true,
+    create: authenticated,
+    read: authenticated,
+    update: authenticated,
+    delete: authenticated,
+  },
+  admin: {
+    group: LABELS.personal,
+    useAsTitle: "name",
   },
   fields: [
     {
@@ -15,9 +21,6 @@ const ExpenseTags: CollectionConfig = {
       required: true,
     },
   ],
-  admin: {
-    useAsTitle: "name",
-  },
 }
 
 export default ExpenseTags;

@@ -1,3 +1,5 @@
+"use server";
+
 import { ExpenseTag } from '@/payload-types';
 import qs from 'qs';
 
@@ -25,7 +27,9 @@ export async function fetchExpenseTag(id: string, depth?: number) : Promise<Expe
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `users API-Key ${process.env.PAYLOAD_API_KEY}`,
     },
+    // credentials: 'include',
   });
 
   if (!res.ok) {

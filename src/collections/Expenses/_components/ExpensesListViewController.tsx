@@ -1,24 +1,21 @@
-// import { Gutter } from 'payload/components/elements'
-// import React, { useEffect, useState } from 'react';
-// import { Search } from 'lucide-react';
-// import payload from 'payload';
-// import { Expense } from 'payload/generated-types';
+import { ListViewServerProps } from "payload";
 
-import { DocumentTabServerProps, ListViewServerProps } from "payload";
+import {
+	formatDateTime,
+	isEqualToformattedDates,
+} from "@/utilities/formatDateTime";
+
 import React from "react";
-import ExpensesListTable from "./ExpensesListTable";
-import { Gutter } from "@payloadcms/ui";
-import { Expense } from "@/payload-types";
-import { Plus } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+
 import Centered from "@/components/ui/Centered";
-import { fetchExpenseTag } from "@/lib/serverFetchers/expenseTagFetchers";
-import PlusButton from "./PlusButton";
 import CenteredOverlay from "./CenteredOverlay";
+import ExpensesListTable from "./ExpensesListTable";
+import { Expense } from "@/payload-types";
+import { fetchExpenseTag } from "@/lib/serverFetchers/expenseTagFetchers";
 import H1 from "@/components/styledComponents/H1";
+import { Gutter } from "@payloadcms/ui";
+import PlusButton from "./PlusButton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CustomTabComponentClient } from "./CustomTab";
 
 async function orderExpensesByDay(input: Expense[]) {
 	const output = new Map<string, Expense[]>();
@@ -32,16 +29,27 @@ async function orderExpensesByDay(input: Expense[]) {
 			const fullTag = await fetchExpenseTag(expense.tag);
 			expense = { ...expense, tag: fullTag };
 		}
-
-		const current = output.get(expense.date);
+		// this compares the date as a string.
+		// // so wont necessarily match the same day.
+		const current = getExpensesByDate(output, expense.date);
 		if (current) {
-			output.set(expense.date, [...current, expense]);
+			output.set(formatDateTime(expense.date), [...current, expense]);
 		} else {
-			output.set(expense.date, [expense]);
+			output.set(formatDateTime(expense.date), [expense]);
 		}
 	}
 
 	return output;
+}
+
+function getExpensesByDate(
+	map: Map<string, Expense[]>,
+	date: string,
+): Expense[] | undefined {
+	for (const k of map.keys()) {
+		const equal = isEqualToformattedDates(date, k);
+		if (equal) return map.get(k);
+	}
 }
 
 export const ExpensesListViewController = async (
@@ -54,43 +62,25 @@ export const ExpensesListViewController = async (
 			<Centered className="relative h-full">
 				<H1 className="mb-8">Expenses</H1>
 
-
 				<Tabs defaultValue="account" className="w-[800px]">
 					<TabsList>
-						<TabsTrigger value="account">Account</TabsTrigger>
-						<TabsTrigger value="password">Password</TabsTrigger>
+						<TabsTrigger value="account">By Date</TabsTrigger>
+						<TabsTrigger value="password">By Category</TabsTrigger>
 					</TabsList>
 					<TabsContent value="account">
-						Make changes to your account here.
+						<ExpensesListTable expenses={orderedExpenses} />
 					</TabsContent>
 					<TabsContent value="password">Change your password here.</TabsContent>
 				</Tabs>
-				<ExpensesListTable expenses={orderedExpenses} />
 			</Centered>
 			<CenteredOverlay>
 				<PlusButton
 					href="expenses/create"
-					className="bottom-8 left-8 bg-red-100"
+					className="bottom-8 left-8 bg-red-100 pointer-events-auto"
 				/>
 			</CenteredOverlay>
 		</Gutter>
 	);
 };
 
-
 export default ExpensesListViewController;
-
-
-type CustomTabComponentProps = {
-  label: string
-} & DocumentTabServerProps
-
-export function CustomTabComponent(props: CustomTabComponentProps) {
-  const { label, path } = props
-
-  return (
-    <li className="custom-doc-tab">
-      <CustomTabComponentClient label={label} path={path} />
-    </li>
-  )
-}

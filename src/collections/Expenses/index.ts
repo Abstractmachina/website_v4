@@ -1,13 +1,14 @@
 import { CollectionConfig } from 'payload'
 import LABELS from '@/LABELS'
+import { authenticated } from '@/access/authenticated'
 
 const Expenses: CollectionConfig = {
   slug: 'expenses',
   access: {
-    create: () => true,
-    read: () => true,
-    update: () => true,
-    delete: () => true,
+    create: authenticated,
+    read: authenticated,
+    update: authenticated,
+    delete: authenticated,
   },
   admin: {
     group: LABELS.personal,
@@ -58,6 +59,10 @@ const Expenses: CollectionConfig = {
         {
           label: 'Business',
           value: 'business',
+        },
+        {
+          label: 'Taxes',
+          value: 'taxes',
         },
         {
           label: 'Wife',

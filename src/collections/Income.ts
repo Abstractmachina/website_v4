@@ -1,3 +1,4 @@
+import { authenticated } from "@/access/authenticated";
 import LABELS from "@/LABELS";
 import { CollectionConfig } from "payload";
 
@@ -5,6 +6,12 @@ const Income: CollectionConfig = {
   slug: "income",
   admin: {
     group: LABELS.personal,
+  },
+  access: {
+    create: authenticated,
+    delete: authenticated,
+    read: authenticated,
+    update: authenticated,
   },
   labels: {
     singular: "Income",

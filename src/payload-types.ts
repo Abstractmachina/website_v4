@@ -416,6 +416,9 @@ export interface User {
   name?: string | null;
   updatedAt: string;
   createdAt: string;
+  enableAPIKey?: boolean | null;
+  apiKey?: string | null;
+  apiKeyIndex?: string | null;
   email: string;
   resetPasswordToken?: string | null;
   resetPasswordExpiration?: string | null;
@@ -775,7 +778,18 @@ export interface Expense {
   id: string;
   amount?: number | null;
   category?:
-    | ('food' | 'shelter' | 'transport' | 'health' | 'fitness' | 'education' | 'business' | 'wife' | 'non-essential')
+    | (
+        | 'food'
+        | 'shelter'
+        | 'transport'
+        | 'health'
+        | 'fitness'
+        | 'education'
+        | 'business'
+        | 'taxes'
+        | 'wife'
+        | 'non-essential'
+      )
     | null;
   tag?: (string | null) | ExpenseTag;
   comment?: string | null;
@@ -1348,6 +1362,9 @@ export interface UsersSelect<T extends boolean = true> {
   name?: T;
   updatedAt?: T;
   createdAt?: T;
+  enableAPIKey?: T;
+  apiKey?: T;
+  apiKeyIndex?: T;
   email?: T;
   resetPasswordToken?: T;
   resetPasswordExpiration?: T;

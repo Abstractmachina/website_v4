@@ -1,41 +1,67 @@
-import dateformat from "dateformat"
+import dateformat from "dateformat";
 
-export const formatDateTime = (timestamp: string): string => {
-  const now = new Date()
-  let date = now
-  if (timestamp) date = new Date(timestamp)
-  const months = date.getMonth()
-  const days = date.getDate()
-  // const hours = date.getHours();
-  // const minutes = date.getMinutes();
-  // const seconds = date.getSeconds();
+/***
+ * formats date strings as "dd/mm/yy". will return "Today", "Yesterday", or the formatted date.
+ */
+export const formatDateTime = (
+	timestamp: string,
+	ignoreToday?: boolean,
+): string => {
+	const currentDate = new Date();
 
-  const MM = months + 1 < 10 ? `0${months + 1}` : months + 1
-  const DD = days < 10 ? `0${days}` : days
-  const YYYY = date.getFullYear()
-  // const AMPM = hours < 12 ? 'AM' : 'PM';
-  // const HH = hours > 12 ? hours - 12 : hours;
-  // const MinMin = (minutes < 10) ? `0${minutes}` : minutes;
-  // const SS = (seconds < 10) ? `0${seconds}` : seconds;
+	const parsedDate = new Date(Date.parse(timestamp));
 
-  return `${MM}/${DD}/${YYYY}`
+	if (currentDate.getFullYear() === parsedDate.getFullYear()) {
+		if (currentDate.getMonth() === parsedDate.getMonth()) {
+			if (currentDate.getDate() === parsedDate.getDate()) {
+				return ignoreToday ? standardFormat(timestamp) : "Today";
+			} else if (currentDate.getDate() - 1 === parsedDate.getDate()) {
+				return ignoreToday ? standardFormat(timestamp) : "Yesterday";
+			}
+		}
+	}
+
+	return standardFormat(timestamp);
+};
+
+const standardFormat = (timestamp: string): string =>
+	dateformat(new Date(Date.parse(timestamp)), "dd/mm/yy");
+
+/***
+ * compares dateStrings as full dates (year-month-day). returns 0 if equal, -1 if a < b, 1 if a > b
+ */
+export function compareDates(a: string, b: string): 1 | 0 | -1 {
+	const parsedA = new Date(Date.parse(a));
+	const parsedB = new Date(Date.parse(b));
+
+	if (parsedA.getFullYear() > parsedB.getFullYear()) {
+		return 1;
+	} else if (parsedA.getFullYear() < parsedB.getFullYear()) {
+		return -1;
+	} else {
+		if (parsedA.getMonth() > parsedB.getMonth()) {
+			return 1;
+		} else if (parsedA.getMonth() < parsedB.getMonth()) {
+			return -1;
+		} else {
+			if (parsedA.getDate() > parsedB.getDate()) {
+				return 1;
+			} else if (parsedA.getDate() < parsedB.getDate()) {
+				return -1;
+			} else {
+				return 0;
+			}
+		}
+	}
 }
 
-export const formatDateTime2 = (timestamp: string): string => {
-  const currentDate = new Date();
-
-  const parsedDate = new Date(Date.parse(timestamp));
-
-  if (currentDate.getDate() === parsedDate.getDate()) {
-    return "Today";
-  }
-
-  if (currentDate.getDate() - 1 === parsedDate.getDate()) {
-    return "Yesterday";
-  }
-
-  return dateformat(
-    new Date(Date.parse(timestamp)),
-    "dd/mm/yy"
-  )
+/***
+ * Compares a raw date string with a formatted date with the shape of "dd/mm/yy".
+ */
+export function isEqualToformattedDates(
+	dateString: string,
+	formattedDate: string,
+): boolean {
+	const processedDate = formatDateTime(dateString);
+	return processedDate === formattedDate;
 }
