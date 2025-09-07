@@ -20,12 +20,11 @@ import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
 import Expenses from './collections/Expenses'
 import ExpenseTags from './collections/Expenses/ExpenseTags'
-import Artwork from './collections/Artwork'
-import ArtTags from './collections/ArtTags'
-import AboutMe from './globals/AboutMe'
-import Graphics from './globals/Graphics'
-import ArtBlogPosts from './collections/ArtBlogPosts'
+import Artwork from './collections/art/Artwork'
+import ArtTags from './collections/art/ArtTags'
+import ArtBlogPosts from './collections/art/ArtBlogPosts'
 import Income from './collections/Income'
+import ArtSiteSettings from './globals/artSite/ArtSiteSettings'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -88,8 +87,7 @@ export default buildConfig({
   globals: [
     Header,
     Footer,
-    AboutMe,
-    Graphics,
+    ArtSiteSettings,
   ],
   cors: [getServerSideURL()].filter(Boolean),
   plugins: [

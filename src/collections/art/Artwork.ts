@@ -66,6 +66,14 @@ const Artwork: CollectionConfig = {
       name: "salesLink",
       type: "text",
     },
+    {
+      name: "originalForSale",
+      type: "checkbox"
+    },
+    {
+      name: "originalSold",
+      type: "checkbox"
+    },
   ],
   hooks: {
     afterChange: [({ req: { payload }, doc }) => revalidateArt(["artwork", "artTags"])],

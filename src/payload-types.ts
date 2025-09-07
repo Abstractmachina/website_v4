@@ -115,14 +115,12 @@ export interface Config {
   globals: {
     header: Header;
     footer: Footer;
-    about: About;
-    graphics: Graphic;
+    artSiteSettings: ArtSiteSetting;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
-    about: AboutSelect<false> | AboutSelect<true>;
-    graphics: GraphicsSelect<false> | GraphicsSelect<true>;
+    artSiteSettings: ArtSiteSettingsSelect<false> | ArtSiteSettingsSelect<true>;
   };
   locale: null;
   user: User & {
@@ -172,6 +170,8 @@ export interface Artwork {
   date?: string | null;
   tags?: (string | ArtTag)[] | null;
   salesLink?: string | null;
+  originalForSale?: boolean | null;
+  originalSold?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1113,6 +1113,8 @@ export interface ArtworkSelect<T extends boolean = true> {
   date?: T;
   tags?: T;
   salesLink?: T;
+  originalForSale?: T;
+  originalSold?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1722,28 +1724,22 @@ export interface Footer {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "about".
+ * via the `definition` "artSiteSettings".
  */
-export interface About {
+export interface ArtSiteSetting {
   id: string;
-  intro?: string | null;
-  main?: string | null;
-  image?: (string | null) | Media;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "graphics".
- */
-export interface Graphic {
-  id: string;
+  blogLive?: boolean | null;
   logos?:
     | {
         logo?: (string | null) | Media;
         id?: string | null;
       }[]
     | null;
+  aboutMe?: {
+    intro?: string | null;
+    main?: string | null;
+    image?: (string | null) | Media;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1795,26 +1791,22 @@ export interface FooterSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "about_select".
+ * via the `definition` "artSiteSettings_select".
  */
-export interface AboutSelect<T extends boolean = true> {
-  intro?: T;
-  main?: T;
-  image?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "graphics_select".
- */
-export interface GraphicsSelect<T extends boolean = true> {
+export interface ArtSiteSettingsSelect<T extends boolean = true> {
+  blogLive?: T;
   logos?:
     | T
     | {
         logo?: T;
         id?: T;
+      };
+  aboutMe?:
+    | T
+    | {
+        intro?: T;
+        main?: T;
+        image?: T;
       };
   updatedAt?: T;
   createdAt?: T;
