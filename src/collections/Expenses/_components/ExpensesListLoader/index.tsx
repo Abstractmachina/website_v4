@@ -20,6 +20,8 @@ export const ExpensesListLoader = async (props: ListViewServerProps) => {
 	}))["docs"] as ExpenseTag[];
 
 
+	console.log(expenses);
+
 	return <ExpensesListController expenses={expenses} expenseTags={expenseTags} />
 };
 
@@ -41,6 +43,6 @@ export async function findByMonth(
 		where: { "date": range },
 		sort: `-date`,
 		pagination: false,
-		depth: 0,
+		depth: 2,
 	});
 }

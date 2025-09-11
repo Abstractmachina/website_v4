@@ -45,6 +45,7 @@ const ExpensesListTable = ({ expenses, sortBy }: Props) => {
 												<span className="font-bold">{doc.category}</span>
 												<span> {(doc.tag as ExpenseTag)?.name}</span>
 											</Link>
+											<span className="text-zinc-400 italic text-xxs ml-2"> {doc.comment}</span>
 										</td>
 										<td className="w-20 text-right pr-2">
 											{_formatCurrency(doc.amount || 0)}
