@@ -25,6 +25,7 @@ import ArtTags from './collections/art/ArtTags'
 import ArtBlogPosts from './collections/art/ArtBlogPosts'
 import Income from './collections/Income'
 import ArtSiteSettings from './globals/artSite/ArtSiteSettings'
+import ArtMetadata from './globals/artSite/ArtMetadata'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -65,6 +66,7 @@ export default buildConfig({
         },
       ],
     },
+    theme: "dark",
   },
   // This config helps us configure global or default features that the other editors can inherit
   editor: defaultLexical,
@@ -88,6 +90,7 @@ export default buildConfig({
     Header,
     Footer,
     ArtSiteSettings,
+    ArtMetadata,
   ],
   cors: [getServerSideURL()].filter(Boolean),
   plugins: [

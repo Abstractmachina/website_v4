@@ -15,12 +15,12 @@ const Expenses: CollectionConfig = {
     components: {
       views: {
         list: {
-          Component: '/collections/Expenses/_components/ExpensesListViewController',
+          Component: '/collections/Expenses/_components/ExpensesListLoader/index',
         },
       },
     },
     pagination: {
-      defaultLimit: 30,
+      defaultLimit: 0,
     },
   },
   fields: [
@@ -88,6 +88,11 @@ const Expenses: CollectionConfig = {
       name: 'date',
       type: 'date',
       defaultValue: new Date().toISOString(),
+      admin: {
+        date: {
+          displayFormat: 'dd/MM/YYYY',
+        }
+      },
       required: true,
     },
     {

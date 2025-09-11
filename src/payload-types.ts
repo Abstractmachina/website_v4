@@ -116,11 +116,13 @@ export interface Config {
     header: Header;
     footer: Footer;
     artSiteSettings: ArtSiteSetting;
+    artMetadata: ArtMetadatum;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
     artSiteSettings: ArtSiteSettingsSelect<false> | ArtSiteSettingsSelect<true>;
+    artMetadata: ArtMetadataSelect<false> | ArtMetadataSelect<true>;
   };
   locale: null;
   user: User & {
@@ -1745,6 +1747,52 @@ export interface ArtSiteSetting {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "artMetadata".
+ */
+export interface ArtMetadatum {
+  id: string;
+  home?: {
+    title?: string | null;
+    description?: string | null;
+    creator?: string | null;
+    publisher?: string | null;
+    generator?: string | null;
+    referrer?: string | null;
+    authors?:
+      | {
+          name?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    keywords?:
+      | {
+          keyword?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    formatDetection?: {
+      telephone?: boolean | null;
+      email?: boolean | null;
+      address?: boolean | null;
+    };
+    openGraph?: {
+      title?: string | null;
+      description?: string | null;
+      url?: string | null;
+      siteName?: string | null;
+      locale?: string | null;
+      type?: string | null;
+      publishedTime?: string | null;
+      images?: (string | Media)[] | null;
+      videos?: (string | Media)[] | null;
+      audio?: (string | Media)[] | null;
+    };
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
@@ -1807,6 +1855,58 @@ export interface ArtSiteSettingsSelect<T extends boolean = true> {
         intro?: T;
         main?: T;
         image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "artMetadata_select".
+ */
+export interface ArtMetadataSelect<T extends boolean = true> {
+  home?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        creator?: T;
+        publisher?: T;
+        generator?: T;
+        referrer?: T;
+        authors?:
+          | T
+          | {
+              name?: T;
+              id?: T;
+            };
+        keywords?:
+          | T
+          | {
+              keyword?: T;
+              id?: T;
+            };
+        formatDetection?:
+          | T
+          | {
+              telephone?: T;
+              email?: T;
+              address?: T;
+            };
+        openGraph?:
+          | T
+          | {
+              title?: T;
+              description?: T;
+              url?: T;
+              siteName?: T;
+              locale?: T;
+              type?: T;
+              publishedTime?: T;
+              images?: T;
+              videos?: T;
+              audio?: T;
+            };
       };
   updatedAt?: T;
   createdAt?: T;
