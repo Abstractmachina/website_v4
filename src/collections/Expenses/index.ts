@@ -31,6 +31,7 @@ const Expenses: CollectionConfig = {
     {
       name: 'category',
       type: 'select',
+      required: true,
       options: [
         {
           label: 'Food',

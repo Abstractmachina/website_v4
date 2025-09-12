@@ -26,6 +26,7 @@ import ArtBlogPosts from './collections/art/ArtBlogPosts'
 import Income from './collections/Income'
 import ArtSiteSettings from './globals/artSite/ArtSiteSettings'
 import ArtMetadata from './globals/artSite/ArtMetadata'
+import Budget from './globals/personal/Budget'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -91,6 +92,7 @@ export default buildConfig({
     Footer,
     ArtSiteSettings,
     ArtMetadata,
+    Budget,
   ],
   cors: [getServerSideURL()].filter(Boolean),
   plugins: [

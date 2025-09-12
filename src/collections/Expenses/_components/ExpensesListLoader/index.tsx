@@ -11,7 +11,7 @@ export const ExpensesListLoader = async (props: ListViewServerProps) => {
 	const year : number = searchParams ? Number(searchParams["year"]) : new Date().getFullYear();
 
 
-	const expenses = (month >= 0 && year >= 0) ? (await findByMonth(payload, "expenses", year, month))["docs"] as Expense[] : [];
+	const expenses = (month >= 0 && year >= 0) ? (await _findByMonth(payload, "expenses", year, month))["docs"] as Expense[] : [];
 
 	const expenseTags = (await payload.find({
 		collection: "expenseTags",
@@ -19,16 +19,13 @@ export const ExpensesListLoader = async (props: ListViewServerProps) => {
 		where: { },
 	}))["docs"] as ExpenseTag[];
 
-
-	console.log(expenses);
-
 	return <ExpensesListController expenses={expenses} expenseTags={expenseTags} />
 };
 
 export default ExpensesListLoader;
 
 
-export async function findByMonth(
+export async function _findByMonth(
 	payload: Payload,
 	collection: string,
 	year: number,

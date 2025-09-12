@@ -21,12 +21,19 @@ const ExpensesListTable = ({ expenses, sortBy }: Props) => {
 		return result;
 	}, [expenses]);
 
+
+	// if (sortBy === "category") {
+	// 	return (
+
+	// 	)
+	// }
+
 	return (
 		<div className="flex flex-col gap-4">
 			<div className="w-full bg-zinc-400 bg-opacity-25 p-8 rounded-md flex justify-center">
 				<H3>Monthly Total: &euro; { _formatCurrency(total) }</H3>
 			</div>
-			<table id="expenses_list_table_container" className="w-full">
+			<div id="expenses_list_table_container" className="w-full">
 				{Array.from(expenses).map(([key, val]) => {
 					const total = _getTotal(val.map((doc: Expense) => doc.amount || 0));
 					return (
@@ -42,7 +49,7 @@ const ExpensesListTable = ({ expenses, sortBy }: Props) => {
 									<tr key={key + "_" + index}>
 										<td className="pl-2">
 											<Link href={`/admin/collections/expenses/${doc.id}`}>
-												<span className="font-bold">{doc.category}</span>
+												<span className="font-bold">{ sortBy === "category" ? formatDateTime(doc.updatedAt) :  doc.category}</span>
 												<span> {(doc.tag as ExpenseTag)?.name}</span>
 											</Link>
 											<span className="text-zinc-400 italic text-xxs ml-2"> {doc.comment}</span>
@@ -57,7 +64,7 @@ const ExpensesListTable = ({ expenses, sortBy }: Props) => {
 						</table>
 					);
 				})}
-			</table>
+			</div>
 		</div>
 	);
 };

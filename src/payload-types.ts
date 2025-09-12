@@ -117,12 +117,14 @@ export interface Config {
     footer: Footer;
     artSiteSettings: ArtSiteSetting;
     artMetadata: ArtMetadatum;
+    budget: Budget;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
     artSiteSettings: ArtSiteSettingsSelect<false> | ArtSiteSettingsSelect<true>;
     artMetadata: ArtMetadataSelect<false> | ArtMetadataSelect<true>;
+    budget: BudgetSelect<false> | BudgetSelect<true>;
   };
   locale: null;
   user: User & {
@@ -779,20 +781,17 @@ export interface Form {
 export interface Expense {
   id: string;
   amount?: number | null;
-  category?:
-    | (
-        | 'food'
-        | 'shelter'
-        | 'transport'
-        | 'health'
-        | 'fitness'
-        | 'education'
-        | 'business'
-        | 'taxes'
-        | 'wife'
-        | 'non-essential'
-      )
-    | null;
+  category:
+    | 'food'
+    | 'shelter'
+    | 'transport'
+    | 'health'
+    | 'fitness'
+    | 'education'
+    | 'business'
+    | 'taxes'
+    | 'wife'
+    | 'non-essential';
   tag?: (string | null) | ExpenseTag;
   comment?: string | null;
   date: string;
@@ -1793,6 +1792,16 @@ export interface ArtMetadatum {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "budget".
+ */
+export interface Budget {
+  id: string;
+  budget: number;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
@@ -1908,6 +1917,16 @@ export interface ArtMetadataSelect<T extends boolean = true> {
               audio?: T;
             };
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "budget_select".
+ */
+export interface BudgetSelect<T extends boolean = true> {
+  budget?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
