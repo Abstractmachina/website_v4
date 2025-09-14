@@ -6,7 +6,7 @@ import type { AdminViewServerProps, AdminViewServerPropsOnly, DocumentViewClient
 // type Props = {
 // }
 
-const EditView = async ({ initPageResult, doc, params, searchParams, payload }: DocumentViewServerProps) => {
+const EditDefaultViewLoader = async ({ initPageResult, doc, params, searchParams, payload }: DocumentViewServerProps) => {
   const { req, permissions, visibleEntities, locale } = initPageResult;
   console.log({ id: (doc as any)?.id ?? null, params, searchParams, locale })
   console.log(doc)
@@ -22,4 +22,4 @@ const EditView = async ({ initPageResult, doc, params, searchParams, payload }: 
   )
 }
 
-export default EditView;
+export default EditDefaultViewLoader;

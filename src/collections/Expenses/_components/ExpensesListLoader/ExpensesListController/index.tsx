@@ -29,7 +29,8 @@ const ExpensesListController = ({ expenses, expenseTags }: Props) => {
 	const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth());
 	const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
 	const [selectedTab, setSelectedTab] = useState<string>("date");
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState(expenses.length > 0 ? false : true);
+
 
 	useEffect(() => {
 		setLoading(true);

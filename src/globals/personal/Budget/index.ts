@@ -10,7 +10,7 @@ const Budget: GlobalConfig = {
       views: {
         edit: {
           default: {
-            Component: '/globals/personal/Budget/_components/EditView',
+            Component: '/globals/personal/Budget/_components/EditDefaultViewLoader',
           }
         },
       },
