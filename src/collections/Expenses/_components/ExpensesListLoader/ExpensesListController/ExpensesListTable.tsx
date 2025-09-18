@@ -9,18 +9,23 @@ import Link from "next/link";
 import H3 from "@/components/styledComponents/H3";
 
 type Props = {
-	expenses: Map<string, Expense[]>;
+	expenses?: Map<string, Expense[]>;
 	sortBy?: "date" | "category";
 };
 
 const ExpensesListTable = ({ expenses, sortBy }: Props) => {
-	
 	const total = useMemo(() => {
 		if (!expenses) return 0;
-		const result = _getTotal(Array.from(expenses.values()).map((expenseArray) => { const sub = _getTotal(expenseArray.map((doc: Expense) => doc.amount || 0)); return sub; }));
+		const result = _getTotal(
+			Array.from(expenses.values()).map((expenseArray) => {
+				const sub = _getTotal(
+					expenseArray.map((doc: Expense) => doc.amount || 0),
+				);
+				return sub;
+			}),
+		);
 		return result;
 	}, [expenses]);
-
 
 	// if (sortBy === "category") {
 	// 	return (
@@ -28,10 +33,14 @@ const ExpensesListTable = ({ expenses, sortBy }: Props) => {
 	// 	)
 	// }
 
+	if (!expenses) {
+		return null;
+	}
+
 	return (
 		<div className="flex flex-col gap-4">
 			<div className="w-full bg-zinc-400 bg-opacity-25 p-8 rounded-md flex justify-center">
-				<H3>Monthly Total: &euro; { _formatCurrency(total) }</H3>
+				<H3>Monthly Total: &euro; {_formatCurrency(total)}</H3>
 			</div>
 			<div id="expenses_list_table_container" className="w-full">
 				{Array.from(expenses).map(([key, val]) => {
@@ -49,10 +58,17 @@ const ExpensesListTable = ({ expenses, sortBy }: Props) => {
 									<tr key={key + "_" + index}>
 										<td className="pl-2">
 											<Link href={`/admin/collections/expenses/${doc.id}`}>
-												<span className="font-bold">{ sortBy === "category" ? formatDateTime(doc.updatedAt) :  doc.category}</span>
+												<span className="font-bold">
+													{sortBy === "category"
+														? formatDateTime(doc.updatedAt)
+														: doc.category}
+												</span>
 												<span> {(doc.tag as ExpenseTag)?.name}</span>
 											</Link>
-											<span className="text-zinc-400 italic text-xxs ml-2"> {doc.comment}</span>
+											<span className="text-zinc-400 italic text-xxs ml-2">
+												{" "}
+												{doc.comment}
+											</span>
 										</td>
 										<td className="w-20 text-right pr-2">
 											{_formatCurrency(doc.amount || 0)}

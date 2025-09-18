@@ -13,43 +13,53 @@ import PlusButton from "../../PlusButton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatDateTime, isEqualToformattedDates } from "@/utilities/formatDateTime";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { set } from "react-hook-form";
+import { useExpensesQuery } from "@/queries/expensesQueries";
+import { useExpenseTagsQuery } from "@/queries/expenseTagsQueries";
+
+
+
+
+
 
 type Props = {
-	expenses: Expense[];
-	expenseTags: ExpenseTag[];
 };
 
-const ExpensesListController = ({ expenses, expenseTags }: Props) => {
+const ExpensesListController = ({ }: Props) => {
 	const searchParams = useSearchParams();
 	const router = useRouter();
 	const pathname = usePathname();
-
-
+	
+	
 	const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth());
 	const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
 	const [selectedTab, setSelectedTab] = useState<string>("date");
-	const [loading, setLoading] = useState(expenses.length > 0 ? false : true);
+	
+	const expensesQuery = useExpensesQuery(selectedYear || new Date().getFullYear(), selectedMonth || new Date().getMonth());
+	const expenseTagsQuery = useExpenseTagsQuery();
+	const [loading, setLoading] = useState((expensesQuery.data && expenseTagsQuery.data) ? false : true);
+	// useEffect(() => {
+	// 	if (expenses) setLoading(false);
+	// }, [expenses]);
 
 
-	useEffect(() => {
-		setLoading(true);
-		__updateQueryString();
-	}, [selectedMonth, selectedYear]);
+	// useEffect(() => {
+	// 	setLoading(true);
+	// 	__updateQueryString();
+	// }, [selectedMonth, selectedYear]);
 
-	const sortedExpenses = useMemo<Map<string, Expense[]>>(() => {
+	const sortedExpenses = useMemo<Map<string, Expense[]> | undefined>(() => {
 	if (selectedTab === "category") {
-		const results = _orderExpensesByCategory(expenses);
+		const results = expensesQuery.data ? _orderExpensesByCategory(expensesQuery.data) : undefined;
 		setLoading(false);
 		return results;
 	} 
 	
 
-		const results = _orderExpensesByDay(expenses, expenseTags);
+		const results = (expensesQuery.data && expenseTagsQuery.data) ? _orderExpensesByDay(expensesQuery.data, expenseTagsQuery.data) : undefined;
 		setLoading(false);
 		return results;
 
-	}, [expenses, expenseTags, selectedTab]);
+	}, [expensesQuery.data, expenseTagsQuery.data, selectedTab]);
 
 	function __updateQueryString() {
 		const params = new URLSearchParams(searchParams.toString());
@@ -97,6 +107,94 @@ const ExpensesListController = ({ expenses, expenseTags }: Props) => {
 		</>
 	);
 };
+// type Props = {
+// 	expenses?: Expense[];
+// 	expenseTags: ExpenseTag[];
+// };
+
+// const ExpensesListController = ({ expenses, expenseTags }: Props) => {
+// 	const searchParams = useSearchParams();
+// 	const router = useRouter();
+// 	const pathname = usePathname();
+
+
+// 	const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth());
+// 	const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
+// 	const [selectedTab, setSelectedTab] = useState<string>("date");
+// 	const [loading, setLoading] = useState(expenses ? false : true);
+
+// 	useEffect(() => {
+// 		if (expenses) setLoading(false);
+// 	}, [expenses]);
+
+// 	console.log("loading: ", loading);
+// 	console.log("expenses: ", expenses?.toString());
+
+// 	useEffect(() => {
+// 		setLoading(true);
+// 		__updateQueryString();
+// 	}, [selectedMonth, selectedYear]);
+
+// 	const sortedExpenses = useMemo<Map<string, Expense[]> | undefined>(() => {
+// 	if (selectedTab === "category") {
+// 		const results = expenses ? _orderExpensesByCategory(expenses) : undefined;
+// 		setLoading(false);
+// 		return results;
+// 	} 
+	
+
+// 		const results = expenses ? _orderExpensesByDay(expenses, expenseTags) : undefined;
+// 		setLoading(false);
+// 		return results;
+
+// 	}, [expenses, expenseTags, selectedTab]);
+
+// 	function __updateQueryString() {
+// 		const params = new URLSearchParams(searchParams.toString());
+// 		params.set('month', selectedMonth.toString());
+// 		params.set('year', selectedYear.toString());
+// 		router.push(pathname + '?' + params.toString());
+// 	}
+
+// 	return (
+// 		<>
+// 			<Centered className="relative h-full">
+// 				<H1 className="mb-8">Expenses</H1>
+
+// 				<Tabs value={selectedTab} className="" onValueChange={(value) => setSelectedTab(value)}>
+// 					<TabsList className="w-full">
+// 						<TabsTrigger value="date">By Date</TabsTrigger>
+// 						<TabsTrigger value="category">By Category</TabsTrigger>
+// 						{/* <TabsTrigger value="analysis">Analysis</TabsTrigger> */}
+// 					</TabsList>
+// 					<TabsContent value="date">
+// 						<ControlPanel
+// 							selectedMonth={selectedMonth}
+// 							setSelectedMonth={setSelectedMonth}
+// 							selectedYear={selectedYear}
+// 							setSelectedYear={setSelectedYear}
+// 						/>
+// 						{loading ? <span>... Loading ...</span> :
+// 							<ExpensesListTable expenses={sortedExpenses} />
+// 						}
+// 					</TabsContent>
+// 					<TabsContent value="category">
+// 						{loading ? <span>... Loading ...</span> :
+// 							<ExpensesListTable expenses={sortedExpenses} sortBy="category"/>
+// 						}
+// 					</TabsContent>
+// 					<TabsContent value="analysis">Change your password here!!!!!!!!!!!!.</TabsContent>
+// 				</Tabs>
+// 			</Centered>
+// 			<CenteredOverlay>
+// 				<PlusButton
+// 					href="expenses/create"
+// 					className="bottom-8 left-8 bg-red-500 pointer-events-auto"
+// 				/>
+// 			</CenteredOverlay>
+// 		</>
+// 	);
+// };
 
 export default ExpensesListController;
 
