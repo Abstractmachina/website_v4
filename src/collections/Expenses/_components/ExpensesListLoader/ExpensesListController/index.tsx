@@ -15,6 +15,9 @@ import { formatDateTime, isEqualToformattedDates } from "@/utilities/formatDateT
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useExpensesQuery } from "@/queries/expensesQueries";
 import { useExpenseTagsQuery } from "@/queries/expenseTagsQueries";
+import { getTotal } from "@/utilities/math/getTotal";
+import exp from "constants";
+import Loader from "@/components/animated/Loader";
 
 
 
@@ -37,9 +40,10 @@ const ExpensesListController = ({ }: Props) => {
 	const expensesQuery = useExpensesQuery(selectedYear || new Date().getFullYear(), selectedMonth || new Date().getMonth());
 	const expenseTagsQuery = useExpenseTagsQuery();
 	const [loading, setLoading] = useState((expensesQuery.data && expenseTagsQuery.data) ? false : true);
-	// useEffect(() => {
-	// 	if (expenses) setLoading(false);
-	// }, [expenses]);
+	useEffect(() => {
+		if (expensesQuery.data && expenseTagsQuery.data) setLoading(false);
+		else setLoading(true);
+	}, [expensesQuery.data, expenseTagsQuery.data]);
 
 
 	// useEffect(() => {
@@ -47,13 +51,8 @@ const ExpensesListController = ({ }: Props) => {
 	// 	__updateQueryString();
 	// }, [selectedMonth, selectedYear]);
 
-	const sortedExpenses = useMemo<Map<string, Expense[]> | undefined>(() => {
-	if (selectedTab === "category") {
-		const results = expensesQuery.data ? _orderExpensesByCategory(expensesQuery.data) : undefined;
-		setLoading(false);
-		return results;
-	} 
-	
+	const sortedExpensesByDate = useMemo<Map<string, Expense[]> | undefined>(() => {
+		if (selectedTab === "category") return undefined;
 
 		const results = (expensesQuery.data && expenseTagsQuery.data) ? _orderExpensesByDay(expensesQuery.data, expenseTagsQuery.data) : undefined;
 		setLoading(false);
@@ -61,41 +60,51 @@ const ExpensesListController = ({ }: Props) => {
 
 	}, [expensesQuery.data, expenseTagsQuery.data, selectedTab]);
 
-	function __updateQueryString() {
-		const params = new URLSearchParams(searchParams.toString());
-		params.set('month', selectedMonth.toString());
-		params.set('year', selectedYear.toString());
-		router.push(pathname + '?' + params.toString());
-	}
+	const sortedExpensesByCategory = useMemo<Map<string, Map<string,Expense[]>> | undefined>(() => {
+		if (selectedTab === "date") return undefined;
+		
+			const results = expensesQuery.data ? _sortExpensesByCategory(expensesQuery.data) : undefined;
+			setLoading(false);
+			return results;
+	}, [expensesQuery.data, selectedTab]);
+
 
 	return (
 		<>
-			<Centered className="relative h-full">
+			<Centered className="relative h-full px-4 sm:px-0">
 				<H1 className="mb-8">Expenses</H1>
 
+				<ControlPanel
+					selectedMonth={selectedMonth}
+					setSelectedMonth={setSelectedMonth}
+					selectedYear={selectedYear}
+					setSelectedYear={setSelectedYear}
+				/>
 				<Tabs value={selectedTab} className="" onValueChange={(value) => setSelectedTab(value)}>
 					<TabsList className="w-full">
 						<TabsTrigger value="date">By Date</TabsTrigger>
 						<TabsTrigger value="category">By Category</TabsTrigger>
-						{/* <TabsTrigger value="analysis">Analysis</TabsTrigger> */}
 					</TabsList>
 					<TabsContent value="date">
-						<ControlPanel
-							selectedMonth={selectedMonth}
-							setSelectedMonth={setSelectedMonth}
-							selectedYear={selectedYear}
-							setSelectedYear={setSelectedYear}
-						/>
-						{loading ? <span>... Loading ...</span> :
-							<ExpensesListTable expenses={sortedExpenses} />
+						{loading ? <div className="w-full h-96 flex justify-center items-center">
+							<Loader />
+						</div> :
+							<ExpensesListTable
+								expensesByDate={sortedExpensesByDate}
+								expensesByCategory={sortedExpensesByCategory}
+								sortBy={"date"}
+							/>
 						}
 					</TabsContent>
 					<TabsContent value="category">
 						{loading ? <span>... Loading ...</span> :
-							<ExpensesListTable expenses={sortedExpenses} sortBy="category"/>
+							<ExpensesListTable
+								expensesByDate={sortedExpensesByDate}
+								expensesByCategory={sortedExpensesByCategory}
+								sortBy={"category"}
+							/>
 						}
 					</TabsContent>
-					<TabsContent value="analysis">Change your password here!!!!!!!!!!!!.</TabsContent>
 				</Tabs>
 			</Centered>
 			<CenteredOverlay>
@@ -107,94 +116,6 @@ const ExpensesListController = ({ }: Props) => {
 		</>
 	);
 };
-// type Props = {
-// 	expenses?: Expense[];
-// 	expenseTags: ExpenseTag[];
-// };
-
-// const ExpensesListController = ({ expenses, expenseTags }: Props) => {
-// 	const searchParams = useSearchParams();
-// 	const router = useRouter();
-// 	const pathname = usePathname();
-
-
-// 	const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth());
-// 	const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
-// 	const [selectedTab, setSelectedTab] = useState<string>("date");
-// 	const [loading, setLoading] = useState(expenses ? false : true);
-
-// 	useEffect(() => {
-// 		if (expenses) setLoading(false);
-// 	}, [expenses]);
-
-// 	console.log("loading: ", loading);
-// 	console.log("expenses: ", expenses?.toString());
-
-// 	useEffect(() => {
-// 		setLoading(true);
-// 		__updateQueryString();
-// 	}, [selectedMonth, selectedYear]);
-
-// 	const sortedExpenses = useMemo<Map<string, Expense[]> | undefined>(() => {
-// 	if (selectedTab === "category") {
-// 		const results = expenses ? _orderExpensesByCategory(expenses) : undefined;
-// 		setLoading(false);
-// 		return results;
-// 	} 
-	
-
-// 		const results = expenses ? _orderExpensesByDay(expenses, expenseTags) : undefined;
-// 		setLoading(false);
-// 		return results;
-
-// 	}, [expenses, expenseTags, selectedTab]);
-
-// 	function __updateQueryString() {
-// 		const params = new URLSearchParams(searchParams.toString());
-// 		params.set('month', selectedMonth.toString());
-// 		params.set('year', selectedYear.toString());
-// 		router.push(pathname + '?' + params.toString());
-// 	}
-
-// 	return (
-// 		<>
-// 			<Centered className="relative h-full">
-// 				<H1 className="mb-8">Expenses</H1>
-
-// 				<Tabs value={selectedTab} className="" onValueChange={(value) => setSelectedTab(value)}>
-// 					<TabsList className="w-full">
-// 						<TabsTrigger value="date">By Date</TabsTrigger>
-// 						<TabsTrigger value="category">By Category</TabsTrigger>
-// 						{/* <TabsTrigger value="analysis">Analysis</TabsTrigger> */}
-// 					</TabsList>
-// 					<TabsContent value="date">
-// 						<ControlPanel
-// 							selectedMonth={selectedMonth}
-// 							setSelectedMonth={setSelectedMonth}
-// 							selectedYear={selectedYear}
-// 							setSelectedYear={setSelectedYear}
-// 						/>
-// 						{loading ? <span>... Loading ...</span> :
-// 							<ExpensesListTable expenses={sortedExpenses} />
-// 						}
-// 					</TabsContent>
-// 					<TabsContent value="category">
-// 						{loading ? <span>... Loading ...</span> :
-// 							<ExpensesListTable expenses={sortedExpenses} sortBy="category"/>
-// 						}
-// 					</TabsContent>
-// 					<TabsContent value="analysis">Change your password here!!!!!!!!!!!!.</TabsContent>
-// 				</Tabs>
-// 			</Centered>
-// 			<CenteredOverlay>
-// 				<PlusButton
-// 					href="expenses/create"
-// 					className="bottom-8 left-8 bg-red-500 pointer-events-auto"
-// 				/>
-// 			</CenteredOverlay>
-// 		</>
-// 	);
-// };
 
 export default ExpensesListController;
 
@@ -234,35 +155,83 @@ function _getExpensesByDate(
   }
 }
 
-function _orderExpensesByCategory(input: Expense[]) {
-	const output = new Map<string, Expense[]>();
+function _sortExpensesByCategory(input: Expense[]): Map<string, Map<string,Expense[]>> {
+	const output = new Map<string, Map<string, Expense[]>>();
 
   for (let i = 0; i < input.length; i++) {
     const expense = input[i];
     if (!expense) continue;
+		const hasTag = (typeof expense.tag !== "string") && (expense.tag !== null) && expense.tag !== undefined;
+		const tag = hasTag ? (expense.tag as ExpenseTag).name : "Untagged";
 
+		// sort expenses into map
+    const foundCategoryMap = _getExpensesByCategory(output, expense.category);
+		if (foundCategoryMap) {
+			const foundTagArray = _getExpensesByTag(foundCategoryMap, (expense.tag as ExpenseTag)?.name || "");
+			if (foundTagArray) {
+				// category exists, tag exists.
+				foundCategoryMap.set(tag, [...foundTagArray, expense]);
+			}
+			else {
+				// category exists, tag does not exist => create new array
+				foundCategoryMap.set(tag, [expense]);
+			}
+		} else {
+			//category does not exist => create new category map and new tag array.
 
-    // this compares the date as a string.
-    // // so wont necessarily match the same day.
-    const current = _getExpensesByCategory(output, expense.category);
-    if (current) {
-      output.set(expense.category, [...current, expense]);
-    } else {
-      output.set(expense.category, [expense]);
+			output.set(expense.category, new Map<string, Expense[]>([[tag, [expense]]]));
     }
-  }
+	}
+	
+	// sort map by total amount descending.
+	// get each category as array [key, value][]
+	let categoryArray = Array.from(output);
+	
+	// for each category, get each tag as array [key, value][]
+	// sort each category by total amount descending as well
+	
+	categoryArray = categoryArray.map(group => {
+		const sortedTagArray = Array.from(group[1]).sort((a, b) => {
+			const totalA = getTotal(a[1].map((doc: Expense) => doc.amount || 0));
+			const totalB = getTotal(b[1].map((doc: Expense) => doc.amount || 0));
+			return totalB - totalA;
+		});
+		return [group[0], new Map<string, Expense[]>(sortedTagArray)];
+	});
+	const sortedCategoryArray = categoryArray.sort((a, b) => {
+		const tagArrayA = Array.from(a[1]);
+		const totalA: number = tagArrayA.reduce((acc, curr) => {
+			const subTotal = getTotal(curr[1].map((doc: Expense) => doc.amount || 0));
+			return acc + subTotal;
+		}, 0);
+		const tagArrayB = Array.from(b[1]);
+		const totalB: number = tagArrayB.reduce((acc, curr) => {
+			const subTotal = getTotal(curr[1].map((doc: Expense) => doc.amount || 0));
+			return acc + subTotal;
+		}, 0);
+		return totalB - totalA;
+	});
 
-  return output;
+  return new Map(sortedCategoryArray);
 }
 
 /***
  * 
  */
 function _getExpensesByCategory(
-  map: Map<string, Expense[]>,
+  map: Map<string, Map<string,Expense[]>>,
   category: string,
-): Expense[] | undefined {
+): Map<string,Expense[]> | undefined {
   for (const k of map.keys()) {
     if (k === category) return map.get(k);
   }
 }
+
+function _getExpensesByTag(
+	map: Map<string,Expense[]>,
+	tag: string
+): Expense[] | undefined {
+		for (const k of map.keys()) {
+			if (k === tag) return map.get(k);
+		}
+	}

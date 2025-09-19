@@ -47,3 +47,26 @@ export async function fetchExpenses(args: { year:number, month:number}) : Promis
 
   return json["docs"] as Expense[];
 }
+
+// export async function _findByMonth(
+// 	payload: Payload,
+// 	collection: string,
+// 	year: number,
+// 	month: number,
+// ): Promise<Expense[] | undefined> {
+// 	if (Number.isNaN(year) || Number.isNaN(month)) return undefined;
+
+// 	const startISO = new Date(year, month, 1).toISOString();
+// 	const endISO = new Date(year, month + 1, 0).toISOString();
+// 	const range = { greater_than_equal: startISO, less_than_equal: endISO };
+
+// 	const result = await payload.find({
+// 		collection,
+// 		where: { date: range },
+// 		sort: `-date`,
+// 		pagination: false,
+// 		depth: 2,
+// 	});
+
+// 	return result["docs"] as Expense[];
+// }
