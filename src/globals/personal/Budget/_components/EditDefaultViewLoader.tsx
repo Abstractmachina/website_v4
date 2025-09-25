@@ -1,6 +1,7 @@
 
 import React from 'react';
 import type { AdminViewServerProps, AdminViewServerPropsOnly, DocumentViewClientProps, DocumentViewServerProps, DocumentViewServerPropsOnly } from 'payload';
+import EditDefaultViewController from './EditDefaultViewController';
 
 
 // type Props = {
@@ -18,7 +19,9 @@ const EditDefaultViewLoader = async ({ initPageResult, doc, params, searchParams
   console.log("document", document)
 
   return (
-    <div>EditView</div>
+    <div>
+      <EditDefaultViewController />
+    </div>
   )
 }
 

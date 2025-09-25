@@ -10,16 +10,22 @@ import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/
 import { searchFields } from '@/search/fieldOverrides'
 import { beforeSyncWithSearch } from '@/search/beforeSync'
 
-import { Page, Post } from '@/payload-types'
-import { getServerSideURL } from '@/utilities/getURL'
+import { Artwork, Page, Post } from '@/payload-types'
+import { getArtBaseURL, getServerSideURL } from '@/utilities/getURL'
+import { isArtwork } from '@/types/payload-typechecks'
 
-const generateTitle: GenerateTitle<Post | Page> = ({ doc }) => {
-  return doc?.title ? `${doc.title} | Payload Website Template` : 'Payload Website Template'
+const generateTitle: GenerateTitle<Post | Page | Artwork> = ({ doc }) => {
+  return doc?.title ? `${doc.title} | Artwork by Taole Chen` : 'Payload Website Template'
 }
 
-const generateURL: GenerateURL<Post | Page> = ({ doc }) => {
-  const url = getServerSideURL()
+const generateURL: GenerateURL<Post | Page | Artwork> = async ({ doc }) => {
 
+  if (await isArtwork(doc)) {
+    const url = getArtBaseURL();
+    return `${url}/artwork/${doc.slug}`;
+  }
+
+  const url = getServerSideURL()
   return doc?.slug ? `${url}/${doc.slug}` : url
 }
 
@@ -51,8 +57,13 @@ export const plugins: Plugin[] = [
     generateURL: (docs) => docs.reduce((url, doc) => `${url}/${doc.slug}`, ''),
   }),
   seoPlugin({
-    generateTitle,
+    collections:['artwork'],
+    generateTitle : ({ doc }) => {
+      return doc?.title ? `${doc.title} | Artwork by Taole Chen` : 'Artwork by Taole Chen'
+    },
     generateURL,
+    tabbedUI: true,
+    uploadsCollection: 'media',
   }),
   formBuilderPlugin({
     fields: {

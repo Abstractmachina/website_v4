@@ -176,6 +176,14 @@ export interface Artwork {
   salesLink?: string | null;
   originalForSale?: boolean | null;
   originalSold?: boolean | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (string | null) | Media;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -1116,6 +1124,13 @@ export interface ArtworkSelect<T extends boolean = true> {
   salesLink?: T;
   originalForSale?: T;
   originalSold?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
