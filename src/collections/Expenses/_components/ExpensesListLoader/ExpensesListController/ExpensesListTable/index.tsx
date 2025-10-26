@@ -8,6 +8,7 @@ import { formatDateTime } from "@/utilities/formatDateTime";
 import Link from "next/link";
 import H3 from "@/components/styledComponents/H3";
 import { capitalizeFirstLetter } from "@/utilities/string/capitalizeFirstLetter";
+import { roundToDecimal } from "@/utilities/math/round";
 
 type Props = {
 	expensesByDate?: Map<string, Expense[]>;
@@ -67,7 +68,7 @@ const ExpensesListTable = ({ expensesByDate, expensesByCategory, sortBy }: Props
 							<tbody className="bg-zinc-800">
 								{val.map((doc: Expense, index: number) => (
 									<tr key={key + "_" + index}>
-										<td className="pl-2">
+										<td className="pl-8">
 											<Link href={`/admin/collections/expenses/${doc.id}`}>
 												<span className="font-bold">
 													{sortBy === "category"
@@ -106,34 +107,35 @@ const ExpensesListTable = ({ expensesByDate, expensesByCategory, sortBy }: Props
 					{
 						Array.from(expensesByCategory).map(([key, val]) => {
 						
-						const total = _getTotal(Array.from(val).map((group) => {
+						const rawTotal = _getTotal(Array.from(val).map((group) => {
 							return _getTotal(group[1].map((doc: Expense) => doc.amount || 0));
 						}
 						));
+							
+							const total = roundToDecimal(rawTotal, 2);
 
 
 						return (
-							<table key={"categoryTable_" + key} className="w-full border-collapse mb-4">
+							<table key={"categoryTable_" + key} className="w-full border-collapse">
 								<thead className="w-full">
 									<tr className="px-2 bg-red-500/20 text-lg">
-										<th className="text-left pl-2">{capitalizeFirstLetter(key)}</th>
-										<th className="text-right pr-2">{total}</th>
+										<th className="text-left pl-4 py-2">{capitalizeFirstLetter(key)}</th>
+										<th className="text-right pr-4">{total}</th>
 									</tr>
 								</thead>
-								<tbody className=" pl-4 w-full ">
+								<tbody className=" pl-4 w-full">
 
 									{
 										Array.from(val).map(([key2, val2]) => {
 											return (
-												<tr key={"tagGroup_" + key2} id={"tag-group-container_" + key2 } className="w-full ">
+												<tr key={"tagGroup_" + key2} id={"tag-group-container_" + key2 } className="w-full">
 													<td colSpan={2} className="w-full">
 														<div className="w-full bg-opacity-50">
 															<table className="border-collapse w-full" id={"tag-group-table_" + key2}>
 																<thead>
-
-																<tr className="text-lg font-bold">
+																<tr className=" font-bold">
 																	<th className="text-left pl-8">{key2}</th>
-																	<th className="text-right pr-2">{ _formatCurrency( _getTotal(val2.map((doc: Expense) => doc.amount || 0)))}</th>
+																	<th className="text-right pr-8">{ _formatCurrency( _getTotal(val2.map((doc: Expense) => doc.amount || 0)))}</th>
 																</tr>
 																</thead>
 																<tbody className="bg-zinc-800">
@@ -148,14 +150,13 @@ const ExpensesListTable = ({ expensesByDate, expensesByCategory, sortBy }: Props
 																										? formatDateTime(doc.updatedAt)
 																										: doc.category}
 																								</span>
-																								<span> {(doc.tag as ExpenseTag)?.name}</span>
 																							</Link>
 																							<span className="text-zinc-400 italic text-xxs ml-2">
 																								{" "}
 																								{doc.comment}
 																							</span>
 																						</td>
-																						<td className="text-right pr-2">
+																						<td className="text-right pr-8">
 																							{_formatCurrency(doc.amount || 0)}
 																						</td>
 																					</tr>

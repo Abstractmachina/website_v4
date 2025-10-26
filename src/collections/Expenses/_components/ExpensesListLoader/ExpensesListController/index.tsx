@@ -110,7 +110,7 @@ const ExpensesListController = ({ }: Props) => {
 			<CenteredOverlay>
 				<PlusButton
 					href="expenses/create"
-					className="bottom-8 left-8 bg-red-500 pointer-events-auto"
+					className=" absolute bottom-12 left-8 bg-red-500 pointer-events-auto"
 				/>
 			</CenteredOverlay>
 		</>
@@ -136,13 +136,14 @@ function _orderExpensesByDay(input: Expense[], tags: ExpenseTag[]) {
     // // so wont necessarily match the same day.
     const current = _getExpensesByDate(output, expense.date);
     if (current) {
-      output.set(formatDateTime(expense.date), [...current, expense]);
+      output.set(formatDateTime(expense.date, true), [...current, expense]);
     } else {
-      output.set(formatDateTime(expense.date), [expense]);
+      output.set(formatDateTime(expense.date, true), [expense]);
     }
-  }
-
-  return output;
+	}
+	
+	const sortedMap = new Map([...output.entries()].sort().reverse());
+  return sortedMap;
 }
 
 function _getExpensesByDate(

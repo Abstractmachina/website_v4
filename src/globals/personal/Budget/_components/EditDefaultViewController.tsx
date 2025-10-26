@@ -22,16 +22,7 @@ const EditDefaultViewController = (props: Props) => {
 						<TabsTrigger value="yearly">Yearly</TabsTrigger>
 					</TabsList>
 					<TabsContent value="monthly">
-						{/* {loading ? <div className="w-full h-96 flex justify-center items-center">
-							<Loader />
-						</div> :
-							<ExpensesListTable
-								expensesByDate={sortedExpensesByDate}
-								expensesByCategory={sortedExpensesByCategory}
-								sortBy={"date"}
-							/>
-						} */}
-          month
+          	month
 					</TabsContent>
 					<TabsContent value="yearly">
 						{/* {loading ? <span>... Loading ...</span> :
