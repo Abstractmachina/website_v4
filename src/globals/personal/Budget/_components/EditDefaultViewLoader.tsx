@@ -1,28 +1,33 @@
+"use client";
 
-import React from 'react';
-import type { AdminViewServerProps, AdminViewServerPropsOnly, DocumentViewClientProps, DocumentViewServerProps, DocumentViewServerPropsOnly } from 'payload';
-import EditDefaultViewController from './EditDefaultViewController';
+import React from "react";
+import type {
+	DocumentViewServerProps,
+} from "payload";
+import EditDefaultViewController from "./EditDefaultViewController";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
+
+const queryClient = new QueryClient();
 
 // type Props = {
 // }
 
-const EditDefaultViewLoader = async ({ initPageResult, doc, params, searchParams, payload }: DocumentViewServerProps) => {
-  const { req, permissions, visibleEntities, locale } = initPageResult;
-  console.log({ id: (doc as any)?.id ?? null, params, searchParams, locale })
-  console.log(doc)
+const EditDefaultViewLoader = ({
+	initPageResult,
+	doc,
+	params,
+	searchParams,
+	payload,
+}: DocumentViewServerProps) => {
 
-  const document = await payload.findGlobal({
-    slug: 'budget',
-  })
-
-  console.log("document", document)
 
   return (
-    <div>
+		<QueryClientProvider client={queryClient}>
       <EditDefaultViewController />
-    </div>
-  )
-}
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>)
+};
 
 export default EditDefaultViewLoader;

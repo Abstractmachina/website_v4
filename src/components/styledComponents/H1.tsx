@@ -8,7 +8,7 @@ type Props = {
 
 const H1 = ({children, className}:Props & PropsWithChildren) => {
   return (
-    <h1 className={cn('', className)}>{children}</h1>
+    <h1 className={cn('text-2xl font-black', className)}>{children}</h1>
   )
 }
 
