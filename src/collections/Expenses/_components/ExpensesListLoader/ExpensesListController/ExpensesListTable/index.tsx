@@ -3,7 +3,6 @@
 import React, { useMemo } from "react";
 
 import { Expense, ExpenseTag } from "@/payload-types";
-import Centered from "@/components/ui/Centered";
 import { formatDateTime } from "@/utilities/formatDateTime";
 import Link from "next/link";
 import H3 from "@/components/styledComponents/H3";

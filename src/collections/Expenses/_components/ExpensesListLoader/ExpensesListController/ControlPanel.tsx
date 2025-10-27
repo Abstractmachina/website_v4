@@ -1,5 +1,5 @@
+import MonthPicker from "@/components/MonthPicker";
 import React from "react";
-import MonthPicker from "./ControlPanel";
 
 type Props = {
 	selectedMonth: number;

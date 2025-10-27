@@ -11,7 +11,6 @@ import H1 from "@/components/styledComponents/H1";
 import PlusButton from "../../PlusButton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatDateTime, isEqualToformattedDates } from "@/utilities/formatDateTime";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useExpensesQuery } from "@/queries/expensesQueries";
 import { useExpenseTagsQuery } from "@/queries/expenseTagsQueries";
 import { getTotal } from "@/utilities/math/getTotal";
@@ -27,10 +26,6 @@ type Props = {
 };
 
 const ExpensesListController = ({ }: Props) => {
-	const searchParams = useSearchParams();
-	const router = useRouter();
-	const pathname = usePathname();
-	
 	
 	const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth());
 	const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
@@ -44,11 +39,6 @@ const ExpensesListController = ({ }: Props) => {
 		else setLoading(true);
 	}, [expensesQuery.data, expenseTagsQuery.data]);
 
-
-	// useEffect(() => {
-	// 	setLoading(true);
-	// 	__updateQueryString();
-	// }, [selectedMonth, selectedYear]);
 
 	const sortedExpensesByDate = useMemo<Map<string, Expense[]> | undefined>(() => {
 		if (selectedTab === "category") return undefined;
