@@ -62,6 +62,6 @@ export function isEqualToformattedDates(
 	dateString: string,
 	formattedDate: string,
 ): boolean {
-	const processedDate = formatDateTime(dateString);
+	const processedDate = formatDateTime(dateString, true);
 	return processedDate === formattedDate;
 }

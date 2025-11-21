@@ -146,7 +146,7 @@ const ExpensesListTable = ({ expensesByDate, expensesByCategory, sortBy }: Props
 																							<Link href={`/admin/collections/expenses/${doc.id}`}>
 																								<span className="font-bold">
 																									{sortBy === "category"
-																										? formatDateTime(doc.updatedAt)
+																										? formatDateTime(doc.date)
 																										: doc.category}
 																								</span>
 																							</Link>

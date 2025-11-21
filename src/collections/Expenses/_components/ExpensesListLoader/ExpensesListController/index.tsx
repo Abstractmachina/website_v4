@@ -117,7 +117,6 @@ function _orderExpensesByDay(input: Expense[], tags: ExpenseTag[]) {
 
     if (typeof expense.tag === "string") {
       // fetch full document.
-      // const fullTag = await fetchExpenseTag(expense.tag);
 			const fullTag = tags.find((tag) => tag.id === expense?.tag);
 			if (fullTag) expense = { ...expense, tag: fullTag };
     }
