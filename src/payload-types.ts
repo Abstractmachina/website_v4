@@ -790,14 +790,17 @@ export interface Expense {
   id: string;
   amount?: number | null;
   category:
+    | 'personalRecurring'
+    | 'personalOneOff'
+    | 'investments'
+    | 'taxes'
+    | 'business'
     | 'food'
     | 'shelter'
     | 'transport'
     | 'health'
     | 'fitness'
     | 'education'
-    | 'business'
-    | 'taxes'
     | 'wife'
     | 'non-essential';
   tag?: (string | null) | ExpenseTag;

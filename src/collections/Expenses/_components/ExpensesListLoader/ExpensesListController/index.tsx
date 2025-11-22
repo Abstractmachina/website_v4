@@ -16,6 +16,7 @@ import { useExpenseTagsQuery } from "@/queries/expenseTagsQueries";
 import { getTotal } from "@/utilities/math/getTotal";
 import Loader from "@/components/animated/Loader";
 import ControlPanel from "./ControlPanel";
+import BatchOperationsPanel from "./BatchOperations";
 
 
 
@@ -70,9 +71,10 @@ const ExpensesListController = ({ }: Props) => {
 					setSelectedYear={setSelectedYear}
 				/>
 				<Tabs value={selectedTab} className="" onValueChange={(value) => setSelectedTab(value)}>
-					<TabsList className="w-full">
+					<TabsList className="w-full gap-2">
 						<TabsTrigger value="date">By Date</TabsTrigger>
 						<TabsTrigger value="category">By Category</TabsTrigger>
+						<TabsTrigger value="batch">Batch Operations</TabsTrigger>
 					</TabsList>
 					<TabsContent value="date">
 						{loading ? <div className="w-full h-96 flex justify-center items-center">
@@ -93,6 +95,9 @@ const ExpensesListController = ({ }: Props) => {
 								sortBy={"category"}
 							/>
 						}
+					</TabsContent>
+					<TabsContent value="batch">
+						<BatchOperationsPanel />
 					</TabsContent>
 				</Tabs>
 			</Centered>
