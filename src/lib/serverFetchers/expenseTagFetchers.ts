@@ -48,6 +48,7 @@ export async function fetchExpenseTags(args?:{depth?: number}) : Promise<Expense
         // where: query,
         // locale: locale ? locale : "en",
         depth: depth || 0,
+        pagination: false,
       },
       { addQueryPrefix: true }
     );
@@ -66,5 +67,5 @@ export async function fetchExpenseTags(args?:{depth?: number}) : Promise<Expense
   }
   const json = await res.json();
 
-  return json as ExpenseTag[];
+  return json["docs"] as ExpenseTag[];
 }

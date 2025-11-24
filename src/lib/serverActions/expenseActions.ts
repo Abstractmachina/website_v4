@@ -56,8 +56,6 @@ export async function updateExpenses(
 ): Promise<BulkOperationResult<"expenses", SelectType>> {
   const payload = await getPayload({ config });
 
-  console.log("where:", where);
-  console.log("data:", data);
   try {
     
       const result = await payload.update({
@@ -65,8 +63,6 @@ export async function updateExpenses(
         where, // required
         data,
       });
-    
-    console.log("Batch updated Expenses:", result);
 
     return result;
   } catch (error) {
