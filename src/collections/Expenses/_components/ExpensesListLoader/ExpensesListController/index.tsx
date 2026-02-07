@@ -32,9 +32,10 @@ const ExpensesListController = ({ }: Props) => {
 	const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
 	const [selectedTab, setSelectedTab] = useState<string>("date");
 	
-	const expensesQuery = useExpensesQuery(selectedYear || new Date().getFullYear(), selectedMonth || new Date().getMonth());
+	const expensesQuery = useExpensesQuery(selectedYear, selectedMonth);
 	const expenseTagsQuery = useExpenseTagsQuery();
 	const [loading, setLoading] = useState((expensesQuery.data && expenseTagsQuery.data) ? false : true);
+
 	useEffect(() => {
 		if (expensesQuery.data && expenseTagsQuery.data) setLoading(false);
 		else setLoading(true);
@@ -63,7 +64,7 @@ const ExpensesListController = ({ }: Props) => {
 		<>
 			<Centered className="relative h-full px-4 sm:px-0">
 				<H1 className="mb-8">Expenses</H1>
-
+				<div>month: {selectedMonth} year: {selectedYear}</div>
 				<ControlPanel
 					selectedMonth={selectedMonth}
 					setSelectedMonth={setSelectedMonth}
