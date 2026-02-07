@@ -1,6 +1,7 @@
 import { authenticated } from "@/access/authenticated";
 import LABELS from "@/LABELS";
 import { CollectionConfig } from "payload";
+import { expenseCategoriesArray } from "./_types/expenseCategories";
 
 const ExpenseTags: CollectionConfig = {
   slug: "expenseTags",
@@ -20,6 +21,12 @@ const ExpenseTags: CollectionConfig = {
       type: "text",
       required: true,
     },
+    {
+      name: "category",
+      type: "select",
+      options: expenseCategoriesArray,
+      hasMany: true,
+    }
   ],
 }
 

@@ -817,6 +817,23 @@ export interface Expense {
 export interface ExpenseTag {
   id: string;
   name: string;
+  category?:
+    | (
+        | 'personalRecurring'
+        | 'personalOneOff'
+        | 'investments'
+        | 'taxes'
+        | 'business'
+        | 'food'
+        | 'shelter'
+        | 'transport'
+        | 'health'
+        | 'fitness'
+        | 'education'
+        | 'wife'
+        | 'non-essential'
+      )[]
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1414,6 +1431,7 @@ export interface ExpensesSelect<T extends boolean = true> {
  */
 export interface ExpenseTagsSelect<T extends boolean = true> {
   name?: T;
+  category?: T;
   updatedAt?: T;
   createdAt?: T;
 }

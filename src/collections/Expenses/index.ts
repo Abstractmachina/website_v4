@@ -1,6 +1,7 @@
 import { CollectionConfig } from 'payload'
 import LABELS from '@/LABELS'
 import { authenticated } from '@/access/authenticated'
+import { expenseCategoriesArray } from './_types/expenseCategories'
 
 /*
 Layer 1: Domains (Top-Level Separation)
@@ -115,60 +116,61 @@ const Expenses: CollectionConfig = {
       name: 'category',
       type: 'select',
       required: true,
-      options: [
-        {
-          label: 'Personal Recurring',
-          value: 'personalRecurring',
-        },
-        {
-          label: "Personal One-Off",
-          value: 'personalOneOff',
-        },
-        {
-          label: "Investments & Savings",
-          value: 'investments',
-        },
-        {
-          label: 'Taxes',
-          value: 'taxes',
-        },
-        {
-          label: 'Business',
-          value: 'business',
-        },
-        {
-          label: 'Food',
-          value: 'food',
-        },
-        {
-          label: 'Shelter',
-          value: 'shelter',
-        },
-        {
-          label: 'Transport',
-          value: 'transport',
-        },
-        {
-          label: 'Health',
-          value: 'health',
-        },
-        {
-          label: 'Fitness',
-          value: 'fitness',
-        },
-        {
-          label: 'Education',
-          value: 'education',
-        },
-        {
-          label: 'Wife',
-          value: 'wife',
-        },
-        {
-          label: 'Non-Essential',
-          value: 'non-essential',
-        },
-      ],
+      options: expenseCategoriesArray,
+      // options: [
+      //   {
+      //     label: 'Personal Recurring',
+      //     value: 'personalRecurring',
+      //   },
+      //   {
+      //     label: "Personal One-Off",
+      //     value: 'personalOneOff',
+      //   },
+      //   {
+      //     label: "Investments & Savings",
+      //     value: 'investments',
+      //   },
+      //   {
+      //     label: 'Taxes',
+      //     value: 'taxes',
+      //   },
+      //   {
+      //     label: 'Business',
+      //     value: 'business',
+      //   },
+      //   {
+      //     label: 'Food',
+      //     value: 'food',
+      //   },
+      //   {
+      //     label: 'Shelter',
+      //     value: 'shelter',
+      //   },
+      //   {
+      //     label: 'Transport',
+      //     value: 'transport',
+      //   },
+      //   {
+      //     label: 'Health',
+      //     value: 'health',
+      //   },
+      //   {
+      //     label: 'Fitness',
+      //     value: 'fitness',
+      //   },
+      //   {
+      //     label: 'Education',
+      //     value: 'education',
+      //   },
+      //   {
+      //     label: 'Wife',
+      //     value: 'wife',
+      //   },
+      //   {
+      //     label: 'Non-Essential',
+      //     value: 'non-essential',
+      //   },
+      // ],
     },
     {
       name: 'tag',
