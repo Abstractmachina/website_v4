@@ -21,7 +21,7 @@
   "dependencies": {
     "@payloadcms/db-mongodb": "latest",
     "@payloadcms/live-preview-react": "latest",
-    "@payloadcms/next": "latest",
+    "@payloadcms/next": "^3.75.0",
     "@payloadcms/plugin-form-builder": "latest",
     "@payloadcms/plugin-nested-docs": "latest",
     "@payloadcms/plugin-redirects": "latest",
